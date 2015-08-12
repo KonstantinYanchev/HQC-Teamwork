@@ -3,6 +3,8 @@ namespace EasyHttp.Specs.Specs
     using System.IO;
     using System.Reflection;
 
+    using Machine.Specifications;
+
     using EasyHttp.Http;
 
     [Subject(typeof(HttpClient))]

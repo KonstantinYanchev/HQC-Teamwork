@@ -1,5 +1,7 @@
 ﻿namespace EasyHttp.Specs.Specs
 {
+    using Machine.Specifications;
+
     using EasyHttp.Infrastructure;
 
     public class When_baseuri_is_null_and_query_is_null

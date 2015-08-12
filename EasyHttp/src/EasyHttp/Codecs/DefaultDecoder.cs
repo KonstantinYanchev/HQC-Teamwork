@@ -2,6 +2,9 @@
 {
     using System;
 
+    using JsonFx.Serialization;
+    using JsonFx.Serialization.Providers;
+
     public class DefaultDecoder : IDecoder
     {
         private readonly IDataReaderProvider _dataReaderProvider;

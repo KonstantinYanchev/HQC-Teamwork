@@ -1,5 +1,7 @@
 ﻿namespace EasyHttp.Specs.BugRepros
 {
+    using Machine.Specifications;
+
     using EasyHttp.Http;
 
     public class when_adding_extra_header_to_request

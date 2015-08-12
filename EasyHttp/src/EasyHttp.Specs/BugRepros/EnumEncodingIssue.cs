@@ -2,6 +2,10 @@
 {
     using System.Collections.Generic;
 
+    using JsonFx.Json;
+    using JsonFx.Serialization;
+    using Machine.Specifications;
+
     using EasyHttp.Codecs;
     using EasyHttp.Codecs.JsonFXExtensions;
     using EasyHttp.Http;

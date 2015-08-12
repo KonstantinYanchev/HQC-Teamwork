@@ -5,6 +5,9 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    using JsonFx.Serialization;
+    using JsonFx.Serialization.Providers;
+
     public class RegExBasedDataReaderProvider : IDataReaderProvider
     {
         private readonly IDictionary<string, IDataReader> _readersByMime =

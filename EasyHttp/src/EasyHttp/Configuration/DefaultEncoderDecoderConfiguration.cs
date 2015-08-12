@@ -51,6 +51,14 @@ namespace EasyHttp.Configuration
 {
     using System.Collections.Generic;
 
+    using JsonFx.Json;
+    using JsonFx.Json.Resolvers;
+    using JsonFx.Model.Filters;
+    using JsonFx.Serialization;
+    using JsonFx.Serialization.Resolvers;
+    using JsonFx.Xml;
+    using JsonFx.Xml.Resolvers;
+
     using EasyHttp.Codecs;
     using EasyHttp.Codecs.JsonFXExtensions;
 
@@ -59,14 +67,14 @@ namespace EasyHttp.Configuration
         public IEncoder GetEncoder()
         {
             var jsonWriter = new JsonWriter(
-                new DataWriterSettings(CombinedResolverStrategy()), 
+                new DataWriterSettings(CombinedResolverStrategy()),
                 new[] { "application/.*json", "text/.*json" });
             var xmlWriter = new XmlWriter(
-                new DataWriterSettings(CombinedResolverStrategy()), 
+                new DataWriterSettings(CombinedResolverStrategy()),
                 new[] { "application/xml", "text/.*xhtml", "text/xml", "text/html" });
 
             var urlEncoderWriter = new UrlEncoderWriter(
-                new DataWriterSettings(CombinedResolverStrategy()), 
+                new DataWriterSettings(CombinedResolverStrategy()),
                 "application/x-www-form-urlencoded");
 
             var writers = new List<IDataWriter> { jsonWriter, xmlWriter, urlEncoderWriter };
@@ -79,10 +87,10 @@ namespace EasyHttp.Configuration
         public IDecoder GetDecoder()
         {
             var jsonReader = new JsonReader(
-                new DataReaderSettings(CombinedResolverStrategy(), new Iso8601DateFilter()), 
+                new DataReaderSettings(CombinedResolverStrategy(), new Iso8601DateFilter()),
                 new[] { "application/.*json", "text/.*json" });
             var xmlReader = new XmlReader(
-                new DataReaderSettings(CombinedResolverStrategy(), new Iso8601DateFilter()), 
+                new DataReaderSettings(CombinedResolverStrategy(), new Iso8601DateFilter()),
                 new[] { "application/.*xml", "text/.*xhtml", "text/xml", "text/html" });
 
             var readers = new List<IDataReader> { jsonReader, xmlReader };
@@ -95,15 +103,15 @@ namespace EasyHttp.Configuration
         public static CombinedResolverStrategy CombinedResolverStrategy()
         {
             return new CombinedResolverStrategy(
-                new JsonResolverStrategy(), 
-                new DataContractResolverStrategy(), 
-                new XmlResolverStrategy(), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.PascalCase), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.CamelCase), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange, "_"), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange, "-"), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Lowercase, "-"), 
+                new JsonResolverStrategy(),
+                new DataContractResolverStrategy(),
+                new XmlResolverStrategy(),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.PascalCase),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.CamelCase),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange, "_"),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange, "-"),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Lowercase, "-"),
                 new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Uppercase, "_"));
         }
     }

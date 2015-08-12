@@ -5,6 +5,8 @@ namespace EasyHttp.Specs.Specs
     using System.IO;
     using System.Net;
 
+    using Machine.Specifications;
+
     using EasyHttp.Http;
     using EasyHttp.Infrastructure;
 
@@ -26,8 +28,8 @@ namespace EasyHttp.Specs.Specs
                 var imageFile = Path.Combine("Helpers", "test.jpg");
 
                 httpClient.PutFile(
-                    string.Format("{0}/fileupload/test.jpg", "http://localhost:16000"), 
-                    imageFile, 
+                    string.Format("{0}/fileupload/test.jpg", "http://localhost:16000"),
+                    imageFile,
                     "image/jpeg");
             };
 

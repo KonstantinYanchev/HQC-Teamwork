@@ -47,15 +47,17 @@
 // THE SOFTWARE.
 #endregion
 
-using Result = EasyHttp.Specs.Helpers.ResultResponse;
-
 namespace EasyHttp.Specs.Specs
 {
     using System;
     using System.Net;
 
+    using Machine.Specifications;
+
     using EasyHttp.Http;
     using EasyHttp.Specs.Helpers;
+
+    using Result = EasyHttp.Specs.Helpers.ResultResponse;
 
     [Subject("HttpClient")]
     public class when_making_any_type_of_request_to_invalid_host
@@ -210,12 +212,12 @@ namespace EasyHttp.Specs.Specs
 
         private Because of =
             () =>
-                {
-                    response = httpClient.Post(
-                        "http://localhost:16000/hello", 
-                        new Customer { Name = "Hadi" }, 
-                        HttpContentTypes.ApplicationJson);
-                };
+            {
+                response = httpClient.Post(
+                    "http://localhost:16000/hello",
+                    new Customer { Name = "Hadi" },
+                    HttpContentTypes.ApplicationJson);
+            };
 
         private It should_succeed = () =>
             {
@@ -242,12 +244,12 @@ namespace EasyHttp.Specs.Specs
 
         private Because of =
             () =>
-                {
-                    response = httpClient.Post(
-                        "http://localhost:16000/hello", 
-                        new Customer { Name = "Hadi" }, 
-                        HttpContentTypes.ApplicationJson);
-                };
+            {
+                response = httpClient.Post(
+                    "http://localhost:16000/hello",
+                    new Customer { Name = "Hadi" },
+                    HttpContentTypes.ApplicationJson);
+            };
 
         private It should_succeed = () =>
             {
@@ -272,12 +274,12 @@ namespace EasyHttp.Specs.Specs
 
         private Because of =
             () =>
-                {
-                    response = httpClient.Put(
-                        string.Format("{0}/{1}", "http://localhost:16000", "hello"), 
-                        new Customer { Name = "Put" }, 
-                        HttpContentTypes.ApplicationJson);
-                };
+            {
+                response = httpClient.Put(
+                    string.Format("{0}/{1}", "http://localhost:16000", "hello"),
+                    new Customer { Name = "Put" },
+                    HttpContentTypes.ApplicationJson);
+            };
 
         private It should_succeed = () =>
             {
@@ -304,8 +306,8 @@ namespace EasyHttp.Specs.Specs
         private Because of = () =>
             {
                 httpClient.Put(
-                    "http://localhost:16000/cookie", 
-                    new CookieInfo { Name = "test", Value = "test cookie" }, 
+                    "http://localhost:16000/cookie",
+                    new CookieInfo { Name = "test", Value = "test cookie" },
                     HttpContentTypes.ApplicationJson);
                 response = httpClient.Get("http://localhost:16000/cookie/test");
             };
@@ -335,8 +337,8 @@ namespace EasyHttp.Specs.Specs
         private Because of = () =>
             {
                 httpClient.Put(
-                    "http://localhost:16000/cookie", 
-                    new CookieInfo { Name = "test", Value = "test cookie" }, 
+                    "http://localhost:16000/cookie",
+                    new CookieInfo { Name = "test", Value = "test cookie" },
                     HttpContentTypes.ApplicationJson);
                 response = httpClient.Get("http://localhost:16000/cookie/test");
             };

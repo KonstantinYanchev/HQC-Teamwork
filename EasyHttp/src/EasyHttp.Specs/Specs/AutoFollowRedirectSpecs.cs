@@ -2,6 +2,8 @@
 {
     using System.Net;
 
+    using Machine.Specifications;
+
     using EasyHttp.Http;
 
     public class AutoFollowRedirectSpecs

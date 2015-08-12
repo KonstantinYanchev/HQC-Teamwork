@@ -51,6 +51,8 @@ namespace EasyHttp.Specs.Specs
 {
     using System;
 
+    using Machine.Specifications;
+
     using EasyHttp.Codecs;
     using EasyHttp.Infrastructure;
 

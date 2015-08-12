@@ -2,6 +2,11 @@
 {
     using System.Net;
 
+    using Funq;
+    using ServiceStack.Common.Web;
+    using ServiceStack.ServiceInterface;
+    using ServiceStack.WebHost.Endpoints;
+
     public class Hello
     {
         public string Name { get; set; }
@@ -105,7 +110,7 @@
 
             return new HttpResult
                        {
-                           StatusCode = HttpStatusCode.Redirect, 
+                           StatusCode = HttpStatusCode.Redirect,
                            Location = this.Request.AbsoluteUri + "/redirected"
                        };
         }

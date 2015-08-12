@@ -1,5 +1,13 @@
+using JsonFx.Json;
+using JsonFx.Json.Resolvers;
+using JsonFx.Serialization;
+using JsonFx.Serialization.Resolvers;
+using JsonFx.Xml.Resolvers;
+using Machine.Specifications;
+
 namespace EasyHttp.Specs.BugRepros
 {
+    //using System.Data;
     using System.Collections.Generic;
     using System.Text;
 
@@ -16,13 +24,11 @@ namespace EasyHttp.Specs.BugRepros
 
         private Establish context = () =>
             {
+
                 IEnumerable<IDataReader> readers = new List<IDataReader>
-                                                       {
-                                                           new JsonReader(
-                                                               new DataReaderSettings(
-                                                               CombinedResolverStrategy()), 
-                                                               HttpContentTypes.ApplicationJson)
-                                                       };
+                {
+                     new JsonReader(new DataReaderSettings(CombinedResolverStrategy()),HttpContentTypes.ApplicationJson)
+                };
 
                 decoder = new DefaultDecoder(new RegExBasedDataReaderProvider(readers));
             };
@@ -36,12 +42,12 @@ namespace EasyHttp.Specs.BugRepros
         private static CombinedResolverStrategy CombinedResolverStrategy()
         {
             return new CombinedResolverStrategy(
-                new JsonResolverStrategy(), 
-                new DataContractResolverStrategy(), 
-                new XmlResolverStrategy(), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.PascalCase), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.CamelCase), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Lowercase, "-"), 
+                new JsonResolverStrategy(),
+                new DataContractResolverStrategy(),
+                new XmlResolverStrategy(),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.PascalCase),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.CamelCase),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Lowercase, "-"),
                 new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Uppercase, "_"));
         }
     }
@@ -82,12 +88,12 @@ namespace EasyHttp.Specs.BugRepros
         private static CombinedResolverStrategy CombinedResolverStrategy()
         {
             return new CombinedResolverStrategy(
-                new JsonResolverStrategy(), 
-                new DataContractResolverStrategy(), 
-                new XmlResolverStrategy(), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.PascalCase), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.CamelCase), 
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Lowercase, "-"), 
+                new JsonResolverStrategy(),
+                new DataContractResolverStrategy(),
+                new XmlResolverStrategy(),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.PascalCase),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.CamelCase),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Lowercase, "-"),
                 new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Uppercase, "_"));
         }
     }

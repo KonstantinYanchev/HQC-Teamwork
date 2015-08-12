@@ -2,6 +2,8 @@
 {
     using System.Dynamic;
 
+    using Machine.Specifications;
+
     using EasyHttp.Http;
     using EasyHttp.Infrastructure;
 

@@ -55,6 +55,9 @@ namespace EasyHttp.Codecs.JsonFXExtensions
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    using JsonFx.Serialization;
+    using JsonFx.Serialization.Providers;
+
     // TODO: This is a copy of the DataWriterProvider in JsonFX. Need to clean it up and move things elsewhere
     public class RegExBasedDataWriterProvider : IDataWriterProvider
     {

@@ -1,5 +1,7 @@
 namespace EasyHttp.Specs.Specs
 {
+    using Machine.Specifications;
+
     using EasyHttp.Http;
 
     [Subject("HttpClient Init")]

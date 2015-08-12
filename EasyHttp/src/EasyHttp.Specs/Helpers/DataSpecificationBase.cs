@@ -1,5 +1,7 @@
 ﻿namespace EasyHttp.Specs.Helpers
 {
+    using Machine.Specifications;
+
     public class DataSpecificationBase : IAssemblyContext
     {
         private ServiceStackHost _appHost;

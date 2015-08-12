@@ -31,6 +31,11 @@ namespace EasyHttp.Specs.BugRepros
     using System;
     using System.Collections.Generic;
 
+    using JsonFx.Json;
+    using JsonFx.Model.Filters;
+    using JsonFx.Serialization;
+    using Machine.Specifications;
+
     using EasyHttp.Codecs;
     using EasyHttp.Codecs.JsonFXExtensions;
     using EasyHttp.Configuration;
@@ -139,7 +144,7 @@ namespace EasyHttp.Specs.BugRepros
             {
                 outputDynamic = decoder.DecodeToDynamic(input, HttpContentTypes.ApplicationJson);
                 outputStatic = decoder.DecodeToStatic<PlaceResponse<PlaceDetail>>(
-                    input, 
+                    input,
                     HttpContentTypes.ApplicationJson);
             };
 

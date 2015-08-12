@@ -55,6 +55,9 @@ namespace EasyHttp.Codecs.JsonFXExtensions
     using System.IO;
     using System.Web;
 
+    using JsonFx.Model;
+    using JsonFx.Serialization;
+
     public class UrlEncoderTextFormatter : ITextFormatter<ModelTokenType>
     {
         public void Format(IEnumerable<Token<ModelTokenType>> tokens, TextWriter writer)

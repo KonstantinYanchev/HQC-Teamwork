@@ -3,6 +3,8 @@
     using System;
     using System.Net;
 
+    using Machine.Specifications;
+
     using EasyHttp.Http;
 
     [Subject(typeof(HttpClient))]
@@ -23,20 +25,20 @@
 
         private Because of =
             () =>
-                {
-                    response = client.Post(
-                        "Users", 
-                        new
-                            {
-                                Password = "foo", 
-                                PasswordExpiration = DateTime.MinValue, 
-                                Email = "new@mail.com", 
-                                FirstName = "test", 
-                                LastName = "fail", 
-                                Information = new { IpAddress = "1.2.3.4" }
-                            }, 
-                        HttpContentTypes.ApplicationJson);
-                };
+            {
+                response = client.Post(
+                    "Users",
+                    new
+                        {
+                            Password = "foo",
+                            PasswordExpiration = DateTime.MinValue,
+                            Email = "new@mail.com",
+                            FirstName = "test",
+                            LastName = "fail",
+                            Information = new { IpAddress = "1.2.3.4" }
+                        },
+                    HttpContentTypes.ApplicationJson);
+            };
 
         private It should_return_all_response_information = () =>
             {
