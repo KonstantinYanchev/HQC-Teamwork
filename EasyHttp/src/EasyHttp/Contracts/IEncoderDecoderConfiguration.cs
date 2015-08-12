@@ -1,7 +1,5 @@
-﻿namespace EasyHttp.Configuration
+﻿namespace EasyHttp.Contracts
 {
-    using EasyHttp.Codecs;
-
     public interface IEncoderDecoderConfiguration
     {
         IEncoder GetEncoder();

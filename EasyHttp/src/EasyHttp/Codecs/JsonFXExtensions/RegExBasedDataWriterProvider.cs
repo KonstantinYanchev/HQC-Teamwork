@@ -73,7 +73,7 @@ namespace EasyHttp.Codecs.JsonFXExtensions
         {
             if (writers != null)
             {
-                foreach (IDataWriter writer in writers)
+                foreach (var writer in writers)
                 {
                     if (this._defaultWriter == null)
                     {
@@ -83,7 +83,7 @@ namespace EasyHttp.Codecs.JsonFXExtensions
                         this._defaultWriter = writer;
                     }
 
-                    foreach (string contentType in writer.ContentType)
+                    foreach (var contentType in writer.ContentType)
                     {
                         if (string.IsNullOrEmpty(contentType) || this._writersByMime.ContainsKey(contentType))
                         {
@@ -93,7 +93,7 @@ namespace EasyHttp.Codecs.JsonFXExtensions
                         this._writersByMime[contentType] = writer;
                     }
 
-                    foreach (string fileExt in writer.FileExtension)
+                    foreach (var fileExt in writer.FileExtension)
                     {
                         if (string.IsNullOrEmpty(fileExt) || this._writersByExt.ContainsKey(fileExt))
                         {
@@ -130,7 +130,7 @@ namespace EasyHttp.Codecs.JsonFXExtensions
 
         public IDataWriter Find(string acceptHeader, string contentTypeHeader)
         {
-            foreach (string type in ParseHeaders(acceptHeader, contentTypeHeader))
+            foreach (var type in ParseHeaders(acceptHeader, contentTypeHeader))
             {
                 var readers = from writer in this._writersByMime
                               where Regex.Match(type, writer.Key, RegexOptions.Singleline).Success
@@ -150,7 +150,7 @@ namespace EasyHttp.Codecs.JsonFXExtensions
             string mime;
 
             // check for a matching accept type
-            foreach (string type in SplitTrim(accept, ','))
+            foreach (var type in SplitTrim(accept, ','))
             {
                 mime = DataProviderUtility.ParseMediaType(type);
                 if (!string.IsNullOrEmpty(mime))

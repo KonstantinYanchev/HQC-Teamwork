@@ -61,6 +61,7 @@ namespace EasyHttp.Configuration
 
     using EasyHttp.Codecs;
     using EasyHttp.Codecs.JsonFXExtensions;
+    using EasyHttp.Contracts;
 
     public class DefaultEncoderDecoderConfiguration : IEncoderDecoderConfiguration
     {

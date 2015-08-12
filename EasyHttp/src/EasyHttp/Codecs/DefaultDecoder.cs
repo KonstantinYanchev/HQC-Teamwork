@@ -5,6 +5,8 @@
     using JsonFx.Serialization;
     using JsonFx.Serialization.Providers;
 
+    using EasyHttp.Contracts;
+
     public class DefaultDecoder : IDecoder
     {
         private readonly IDataReaderProvider _dataReaderProvider;

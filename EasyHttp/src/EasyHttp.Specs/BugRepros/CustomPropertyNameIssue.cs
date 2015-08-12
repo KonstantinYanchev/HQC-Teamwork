@@ -13,6 +13,7 @@ namespace EasyHttp.Specs.BugRepros
 
     using EasyHttp.Codecs;
     using EasyHttp.Codecs.JsonFXExtensions;
+    using EasyHttp.Contracts;
     using EasyHttp.Http;
 
     [Subject("Custom Decoding")]

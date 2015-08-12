@@ -55,6 +55,7 @@ namespace EasyHttp.Http
     using System.Text;
 
     using EasyHttp.Codecs;
+    using EasyHttp.Contracts;
 
     public class HttpResponse
     {

@@ -1,4 +1,4 @@
-﻿namespace EasyHttp.Codecs
+﻿namespace EasyHttp.Contracts
 {
     public interface IEncoder
     {

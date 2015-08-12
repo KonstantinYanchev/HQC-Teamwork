@@ -54,6 +54,8 @@ namespace EasyHttp.Codecs
     using JsonFx.Serialization;
     using JsonFx.Serialization.Providers;
 
+    using EasyHttp.Contracts;
+
     public class DefaultEncoder : IEncoder
     {
         private readonly IDataWriterProvider _dataWriterProvider;

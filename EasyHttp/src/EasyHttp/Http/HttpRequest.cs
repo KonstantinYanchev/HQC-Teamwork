@@ -39,6 +39,7 @@ namespace EasyHttp.Http
     using System.Text;
 
     using EasyHttp.Codecs;
+    using EasyHttp.Contracts;
     using EasyHttp.Infrastructure;
 
     // TODO: This class needs cleaning up and abstracting the encoder one more level

@@ -17,9 +17,9 @@
         {
             if (dataReaders != null)
             {
-                foreach (IDataReader reader in dataReaders)
+                foreach (var reader in dataReaders)
                 {
-                    foreach (string contentType in reader.ContentType)
+                    foreach (var contentType in reader.ContentType)
                     {
                         if (string.IsNullOrEmpty(contentType) || this._readersByMime.ContainsKey(contentType))
                         {
@@ -36,8 +36,7 @@
         {
             var type = DataProviderUtility.ParseMediaType(contentTypeHeader);
 
-            var readers =
-                this._readersByMime.Where(reader => Regex.Match(type, reader.Key, RegexOptions.Singleline).Success);
+            var readers = this._readersByMime.Where(reader => Regex.Match(type, reader.Key, RegexOptions.Singleline).Success);
 
             return readers.Any() ? readers.First().Value : null;
         }

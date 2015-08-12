@@ -54,10 +54,8 @@ namespace EasyHttp.Specs.BugRepros
                 input = "{\"LockedOutUntil\":\"/Date(1289073014137)/\"}";
 
                 IEnumerable<IDataReader> readers = new List<IDataReader>
-                                                       {
-                                                           new JsonReader(
-                                                               new DataReaderSettings(
-                                                               DefaultEncoderDecoderConfiguration
+             { 
+                 new JsonReader(new DataReaderSettings(DefaultEncoderDecoderConfiguration
                                                                .CombinedResolverStrategy(), 
                                                                new MSAjaxDateFilter(), 
                                                                new Iso8601DateFilter()), 

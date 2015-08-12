@@ -53,6 +53,7 @@ namespace EasyHttp.Http
     using System.Security.Cryptography.X509Certificates;
 
     using EasyHttp.Codecs;
+    using EasyHttp.Contracts;
     using EasyHttp.Configuration;
     using EasyHttp.Infrastructure;
 

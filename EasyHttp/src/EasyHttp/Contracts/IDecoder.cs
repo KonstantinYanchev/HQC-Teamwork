@@ -47,7 +47,7 @@
 // THE SOFTWARE.
 #endregion
 
-namespace EasyHttp.Codecs
+namespace EasyHttp.Contracts
 {
     public interface IDecoder
     {
