@@ -1,25 +1,23 @@
-﻿using Machine.Specifications;
-
-namespace EasyHttp.Specs.Helpers
+﻿namespace EasyHttp.Specs.Helpers
 {
     public class DataSpecificationBase : IAssemblyContext
     {
         private ServiceStackHost _appHost;
+
         private int _port;
 
         void IAssemblyContext.OnAssemblyComplete()
         {
-            _appHost.Dispose();    
+            this._appHost.Dispose();
         }
 
         void IAssemblyContext.OnAssemblyStart()
         {
-            _port = 16000;
-            var listeningOn = "http://localhost:" + _port + "/";
-            _appHost = new ServiceStackHost();
-            _appHost.Init();
-            _appHost.Start(listeningOn); 
+            this._port = 16000;
+            var listeningOn = "http://localhost:" + this._port + "/";
+            this._appHost = new ServiceStackHost();
+            this._appHost.Init();
+            this._appHost.Start(listeningOn);
         }
-
     }
 }

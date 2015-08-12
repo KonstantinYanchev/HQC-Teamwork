@@ -1,43 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using EasyHttp.Infrastructure;
-
-namespace EasyHttp.Http
+﻿namespace EasyHttp.Http
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+
+    using EasyHttp.Infrastructure;
+
     public class MultiPartStreamer
     {
-        readonly String _boundary;
-        readonly String _boundaryCode;
-        readonly IList<FileData> _multipartFileData;
-        readonly IDictionary<string, object> _multipartFormData;
+        private readonly string _boundary;
+
+        private readonly string _boundaryCode;
+
+        private readonly IList<FileData> _multipartFileData;
+
+        private readonly IDictionary<string, object> _multipartFormData;
 
         public MultiPartStreamer(IDictionary<string, object> multipartFormData, IList<FileData> multipartFileData)
         {
-            _boundaryCode = DateTime.Now.Ticks.GetHashCode() + "548130";
-            _boundary = string.Format("\r\n----------------{0}", _boundaryCode);
+            this._boundaryCode = DateTime.Now.Ticks.GetHashCode() + "548130";
+            this._boundary = string.Format("\r\n----------------{0}", this._boundaryCode);
 
-            _multipartFormData = multipartFormData;
-            _multipartFileData = multipartFileData;
+            this._multipartFormData = multipartFormData;
+            this._multipartFileData = multipartFileData;
         }
 
         public void StreamMultiPart(Stream stream)
         {
-            stream.WriteString(_boundary);
-			 
-            if (_multipartFormData != null)
+            stream.WriteString(this._boundary);
+
+            if (this._multipartFormData != null)
             {
-                foreach (var entry in _multipartFormData)
+                foreach (var entry in this._multipartFormData)
                 {
                     stream.WriteString(CreateFormBoundaryHeader(entry.Key, entry.Value));
-                    stream.WriteString(_boundary);
+                    stream.WriteString(this._boundary);
                 }
             }
-			 
-            if (_multipartFileData != null)
+
+            if (this._multipartFileData != null)
             {
-                foreach (var fileData in _multipartFileData)
+                foreach (var fileData in this._multipartFileData)
                 {
                     using (var file = new FileStream(fileData.Filename, FileMode.Open))
                     {
@@ -45,14 +49,15 @@ namespace EasyHttp.Http
 
                         StreamFileContents(file, fileData, stream);
 
-                        stream.WriteString(_boundary);
+                        stream.WriteString(this._boundary);
                     }
                 }
             }
+
             stream.WriteString("--");
         }
 
-	    static void StreamFileContents(Stream file, FileData fileData, Stream requestStream)
+        private static void StreamFileContents(Stream file, FileData fileData, Stream requestStream)
         {
             var buffer = new byte[8192];
 
@@ -75,52 +80,52 @@ namespace EasyHttp.Http
 
         public string GetContentType()
         {
-            return string.Format("multipart/form-data; boundary=--------------{0}", _boundaryCode);
-
+            return string.Format("multipart/form-data; boundary=--------------{0}", this._boundaryCode);
         }
 
         public long GetContentLength()
         {
             var ascii = new ASCIIEncoding();
-            long contentLength = ascii.GetBytes(_boundary).Length;
+            long contentLength = ascii.GetBytes(this._boundary).Length;
 
             // Multipart Form
-            if (_multipartFormData != null)
+            if (this._multipartFormData != null)
             {
-                foreach (var entry in _multipartFormData)
+                foreach (var entry in this._multipartFormData)
                 {
                     contentLength += ascii.GetBytes(CreateFormBoundaryHeader(entry.Key, entry.Value)).Length; // header
-                    contentLength += ascii.GetBytes(_boundary).Length;
+                    contentLength += ascii.GetBytes(this._boundary).Length;
                 }
             }
 
-
-            if (_multipartFileData != null)
+            if (this._multipartFileData != null)
             {
-                foreach (var fileData in _multipartFileData)
+                foreach (var fileData in this._multipartFileData)
                 {
                     contentLength += ascii.GetBytes(CreateFileBoundaryHeader(fileData)).Length;
                     contentLength += new FileInfo(fileData.Filename).Length;
-                    contentLength += ascii.GetBytes(_boundary).Length;
+                    contentLength += ascii.GetBytes(this._boundary).Length;
                 }
             }
 
-				contentLength += ascii.GetBytes("--").Length; // ending -- to the boundary
+            contentLength += ascii.GetBytes("--").Length; // ending -- to the boundary
 
             return contentLength;
         }
 
-        static string CreateFileBoundaryHeader(FileData fileData)
+        private static string CreateFileBoundaryHeader(FileData fileData)
         {
-            return string.Format(
-                "\r\nContent-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\n" +
-                "Content-Type: {2}\r\n" +
-                "Content-Transfer-Encoding: {3}\r\n\r\n"
-                , fileData.FieldName, Path.GetFileName(fileData.Filename), fileData.ContentType,
-                fileData.ContentTransferEncoding);
+            return
+                string.Format(
+                    "\r\nContent-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\n" + "Content-Type: {2}\r\n"
+                    + "Content-Transfer-Encoding: {3}\r\n\r\n", 
+                    fileData.FieldName, 
+                    Path.GetFileName(fileData.Filename), 
+                    fileData.ContentType, 
+                    fileData.ContentTransferEncoding);
         }
 
-        static string CreateFormBoundaryHeader(string name, object value)
+        private static string CreateFormBoundaryHeader(string name, object value)
         {
             return string.Format("\r\nContent-Disposition: form-data; name=\"{0}\"\r\n\r\n{1}", name, value);
         }

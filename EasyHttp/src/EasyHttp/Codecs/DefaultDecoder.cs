@@ -1,52 +1,47 @@
-﻿using System;
-using System.IO;
-using JsonFx.Serialization;
-using JsonFx.Serialization.Providers;
-
-namespace EasyHttp.Codecs
+﻿namespace EasyHttp.Codecs
 {
-    public class DefaultDecoder: IDecoder
+    using System;
+
+    public class DefaultDecoder : IDecoder
     {
-        readonly IDataReaderProvider _dataReaderProvider;
+        private readonly IDataReaderProvider _dataReaderProvider;
 
         public DefaultDecoder(IDataReaderProvider dataReaderProvider)
         {
-            _dataReaderProvider = dataReaderProvider;
+            this._dataReaderProvider = dataReaderProvider;
         }
 
         public T DecodeToStatic<T>(string input, string contentType)
         {
-
             var parsedText = NormalizeInputRemovingAmpersands(input);
 
-            var deserializer = ObtainDeserializer(contentType);
+            var deserializer = this.ObtainDeserializer(contentType);
 
             return deserializer.Read<T>(parsedText);
-
         }
 
         public dynamic DecodeToDynamic(string input, string contentType)
         {
             var parsedText = NormalizeInputRemovingAmpersands(input);
 
-            var deserializer = ObtainDeserializer(contentType);
-       
+            var deserializer = this.ObtainDeserializer(contentType);
+
             return deserializer.Read(parsedText);
         }
 
-        IDataReader ObtainDeserializer(string contentType)
+        private IDataReader ObtainDeserializer(string contentType)
         {
-            var deserializer = _dataReaderProvider.Find(contentType);
-
+            var deserializer = this._dataReaderProvider.Find(contentType);
 
             if (deserializer == null)
             {
                 throw new SerializationException("The encoding requested does not have a corresponding decoder");
             }
+
             return deserializer;
         }
 
-		  static string NormalizeInputRemovingAmpersands(string input)
+        private static string NormalizeInputRemovingAmpersands(string input)
         {
             if (string.IsNullOrEmpty(input))
             {

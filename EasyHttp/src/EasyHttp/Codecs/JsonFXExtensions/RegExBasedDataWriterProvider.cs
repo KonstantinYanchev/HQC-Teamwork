@@ -1,10 +1,9 @@
 ﻿#region License
+
 // Distributed under the BSD License
 // =================================
-// 
 // Copyright (c) 2010, Hadi Hariri
 // All rights reserved.
-// 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
 //     * Redistributions of source code must retain the above copyright
@@ -15,7 +14,6 @@
 //     * Neither the name of Hadi Hariri nor the
 //       names of its contributors may be used to endorse or promote products
 //       derived from this software without specific prior written permission.
-// 
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 // ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -28,25 +26,18 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // =============================================================
 // 
-// 
 // Parts of this Software use JsonFX Serialization Library which is distributed under the MIT License:
-// 
 // Distributed under the terms of an MIT-style license:
-// 
 // The MIT License
-// 
 // Copyright (c) 2006-2009 Stephen M. McKamey
-// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -56,159 +47,156 @@
 // THE SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using JsonFx.Serialization;
-using JsonFx.Serialization.Providers;
-
 namespace EasyHttp.Codecs.JsonFXExtensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
     // TODO: This is a copy of the DataWriterProvider in JsonFX. Need to clean it up and move things elsewhere
-    public class RegExBasedDataWriterProvider: IDataWriterProvider
+    public class RegExBasedDataWriterProvider : IDataWriterProvider
     {
-    	readonly IDataWriter _defaultWriter;
-		readonly IDictionary<string, IDataWriter> _writersByExt = new Dictionary<string, IDataWriter>(StringComparer.OrdinalIgnoreCase);
-		readonly IDictionary<string, IDataWriter> _writersByMime = new Dictionary<string, IDataWriter>(StringComparer.OrdinalIgnoreCase);
+        private readonly IDataWriter _defaultWriter;
 
-		
-		public RegExBasedDataWriterProvider(IEnumerable<IDataWriter> writers)
-		{
-			if (writers != null)
-			{
-				foreach (IDataWriter writer in writers)
-				{
-					if (_defaultWriter == null)
-					{
-						// TODO: decide less arbitrary way to choose default
-						// without hardcoding value into IDataWriter.
-						// Currently first DataWriter wins default.
-						_defaultWriter = writer;
-					}
+        private readonly IDictionary<string, IDataWriter> _writersByExt =
+            new Dictionary<string, IDataWriter>(StringComparer.OrdinalIgnoreCase);
 
-					foreach (string contentType in writer.ContentType)
-					{
-						if (String.IsNullOrEmpty(contentType) ||
-							_writersByMime.ContainsKey(contentType))
-						{
-							continue;
-						}
+        private readonly IDictionary<string, IDataWriter> _writersByMime =
+            new Dictionary<string, IDataWriter>(StringComparer.OrdinalIgnoreCase);
 
-						_writersByMime[contentType] = writer;
-					}
+        public RegExBasedDataWriterProvider(IEnumerable<IDataWriter> writers)
+        {
+            if (writers != null)
+            {
+                foreach (IDataWriter writer in writers)
+                {
+                    if (this._defaultWriter == null)
+                    {
+                        // TODO: decide less arbitrary way to choose default
+                        // without hardcoding value into IDataWriter.
+                        // Currently first DataWriter wins default.
+                        this._defaultWriter = writer;
+                    }
 
-					foreach (string fileExt in writer.FileExtension)
-					{
-						if (String.IsNullOrEmpty(fileExt) ||
-							_writersByExt.ContainsKey(fileExt))
-						{
-							continue;
-						}
+                    foreach (string contentType in writer.ContentType)
+                    {
+                        if (string.IsNullOrEmpty(contentType) || this._writersByMime.ContainsKey(contentType))
+                        {
+                            continue;
+                        }
 
-						string ext = NormalizeExtension(fileExt);
-						_writersByExt[ext] = writer;
-					}
-				}
-			}
-		}
+                        this._writersByMime[contentType] = writer;
+                    }
 
+                    foreach (string fileExt in writer.FileExtension)
+                    {
+                        if (string.IsNullOrEmpty(fileExt) || this._writersByExt.ContainsKey(fileExt))
+                        {
+                            continue;
+                        }
 
-		public IDataWriter DefaultDataWriter
-		{
-			get { return _defaultWriter; }
-		}
+                        string ext = NormalizeExtension(fileExt);
+                        this._writersByExt[ext] = writer;
+                    }
+                }
+            }
+        }
 
+        public IDataWriter DefaultDataWriter
+        {
+            get
+            {
+                return this._defaultWriter;
+            }
+        }
 
-		public IDataWriter Find(string extension)
-		{
-			extension = NormalizeExtension(extension);
+        public IDataWriter Find(string extension)
+        {
+            extension = NormalizeExtension(extension);
 
-			IDataWriter writer;
-			if (_writersByExt.TryGetValue(extension, out writer))
-			{
-				return writer;
-			}
+            IDataWriter writer;
+            if (this._writersByExt.TryGetValue(extension, out writer))
+            {
+                return writer;
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		public IDataWriter Find(string acceptHeader, string contentTypeHeader)
-		{
-		    foreach (string type in ParseHeaders(acceptHeader, contentTypeHeader))
-			{
-                var readers = from writer in _writersByMime
-                                    where Regex.Match(type, writer.Key, RegexOptions.Singleline).Success
-                                    select writer;
+        public IDataWriter Find(string acceptHeader, string contentTypeHeader)
+        {
+            foreach (string type in ParseHeaders(acceptHeader, contentTypeHeader))
+            {
+                var readers = from writer in this._writersByMime
+                              where Regex.Match(type, writer.Key, RegexOptions.Singleline).Success
+                              select writer;
 
                 if (readers.Count() > 0)
                 {
                     return readers.First().Value;
                 }
             }
+
             return null;
+        }
 
-		}
+        public static IEnumerable<string> ParseHeaders(string accept, string contentType)
+        {
+            string mime;
 
+            // check for a matching accept type
+            foreach (string type in SplitTrim(accept, ','))
+            {
+                mime = DataProviderUtility.ParseMediaType(type);
+                if (!string.IsNullOrEmpty(mime))
+                {
+                    yield return mime;
+                }
+            }
 
-		public static IEnumerable<string> ParseHeaders(string accept, string contentType)
-		{
-			string mime;
+            // fallback on content-type
+            mime = DataProviderUtility.ParseMediaType(contentType);
+            if (!string.IsNullOrEmpty(mime))
+            {
+                yield return mime;
+            }
+        }
 
-			// check for a matching accept type
-			foreach (string type in SplitTrim(accept, ','))
-			{
-				mime = DataProviderUtility.ParseMediaType(type);
-				if (!String.IsNullOrEmpty(mime))
-				{
-					yield return mime;
-				}
-			}
+        private static IEnumerable<string> SplitTrim(string source, char ch)
+        {
+            if (string.IsNullOrEmpty(source))
+            {
+                yield break;
+            }
 
-			// fallback on content-type
-			mime = DataProviderUtility.ParseMediaType(contentType);
-			if (!String.IsNullOrEmpty(mime))
-			{
-				yield return mime;
-			}
-		}
+            int length = source.Length;
+            for (int prev = 0, next = 0; prev < length && next >= 0; prev = next + 1)
+            {
+                next = source.IndexOf(ch, prev);
+                if (next < 0)
+                {
+                    next = length;
+                }
 
-		private static IEnumerable<string> SplitTrim(string source, char ch)
-		{
-			if (String.IsNullOrEmpty(source))
-			{
-				yield break;
-			}
+                string part = source.Substring(prev, next - prev).Trim();
+                if (part.Length > 0)
+                {
+                    yield return part;
+                }
+            }
+        }
 
-			int length = source.Length;
-			for (int prev=0, next=0; prev<length && next>=0; prev=next+1)
-			{
-				next = source.IndexOf(ch, prev);
-				if (next < 0)
-				{
-					next = length;
-				}
+        private static string NormalizeExtension(string extension)
+        {
+            if (string.IsNullOrEmpty(extension))
+            {
+                return string.Empty;
+            }
 
-				string part = source.Substring(prev, next-prev).Trim();
-				if (part.Length > 0)
-				{
-					yield return part;
-				}
-			}
-		}
-
-		private static string NormalizeExtension(string extension)
-		{
-			if (String.IsNullOrEmpty(extension))
-			{
-				return String.Empty;
-			}
-
-			// ensure is only extension with leading dot
-			return Path.GetExtension(extension);
-		}
-
-
+            // ensure is only extension with leading dot
+            return Path.GetExtension(extension);
+        }
     }
 }

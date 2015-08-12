@@ -1,81 +1,70 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Reflection;
-using EasyHttp.Http;
-using EasyHttp.Infrastructure;
-using EasyHttp.Specs.Helpers;
-using Machine.Specifications;
-
 namespace EasyHttp.Specs.Specs
 {
-    [Subject(typeof (HttpClient))]
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net;
+
+    using EasyHttp.Http;
+    using EasyHttp.Infrastructure;
+
+    [Subject(typeof(HttpClient))]
     public class when_sending_binary_data_as_put
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
-        
-            var imageFile = Path.Combine("Helpers", "test.jpg");
+        private static Guid guid;
 
-            httpClient.PutFile(string.Format("{0}/fileupload/test.jpg", "http://localhost:16000"),
-                                               imageFile,
-                                               "image/jpeg");
+        private static HttpResponse response;
 
-            
-        };
+        private static string rev;
 
-        It should_upload_it_succesfully = () =>
-        {
-            httpClient.Response.StatusCode.ShouldEqual(HttpStatusCode.Created);
-        };
+        private Establish context = () => { httpClient = new HttpClient(); };
 
-        static HttpClient httpClient;
-        static Guid guid;
-        static HttpResponse response;
-        static string rev;
+        private Because of = () =>
+            {
+                var imageFile = Path.Combine("Helpers", "test.jpg");
+
+                httpClient.PutFile(
+                    string.Format("{0}/fileupload/test.jpg", "http://localhost:16000"), 
+                    imageFile, 
+                    "image/jpeg");
+            };
+
+        private It should_upload_it_succesfully =
+            () => { httpClient.Response.StatusCode.ShouldEqual(HttpStatusCode.Created); };
     }
 
-    [Subject(typeof (HttpClient))]
+    [Subject(typeof(HttpClient))]
     public class when_sending_binary_data_as_multipart_post
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
-        
-            var imageFile = Path.Combine("Helpers", "test.jpg");
-        
-            IDictionary<string, object> data = new Dictionary<string, object>();
+        private static Guid guid;
 
-            data.Add("email", "hadi@hadi.com");
-            data.Add("name", "hadi");
-       
-            IList<FileData> files = new List<FileData>();
+        private static HttpResponse response;
 
-            files.Add(new FileData() { FieldName = "image1", ContentType = "image/jpeg", Filename = imageFile});
-            files.Add(new FileData() { FieldName = "image2", ContentType = "image/jpeg", Filename = imageFile });
-            httpClient.Post(string.Format("{0}/fileupload", "http://localhost:16000"), data, files);
-            
-        };
+        private static string rev;
 
-        It should_upload_it_succesfully = () =>
-        {
-            httpClient.Response.StatusCode.ShouldEqual(HttpStatusCode.OK);
-        };
+        private Establish context = () => { httpClient = new HttpClient(); };
 
-        static HttpClient httpClient;
-        static Guid guid;
-        static HttpResponse response;
-        static string rev;
+        private Because of = () =>
+            {
+                var imageFile = Path.Combine("Helpers", "test.jpg");
+
+                IDictionary<string, object> data = new Dictionary<string, object>();
+
+                data.Add("email", "hadi@hadi.com");
+                data.Add("name", "hadi");
+
+                IList<FileData> files = new List<FileData>();
+
+                files.Add(new FileData { FieldName = "image1", ContentType = "image/jpeg", Filename = imageFile });
+                files.Add(new FileData { FieldName = "image2", ContentType = "image/jpeg", Filename = imageFile });
+                httpClient.Post(string.Format("{0}/fileupload", "http://localhost:16000"), data, files);
+            };
+
+        private It should_upload_it_succesfully =
+            () => { httpClient.Response.StatusCode.ShouldEqual(HttpStatusCode.OK); };
     }
-
 }

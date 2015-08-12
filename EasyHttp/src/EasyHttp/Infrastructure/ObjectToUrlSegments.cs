@@ -1,21 +1,28 @@
 ﻿namespace EasyHttp.Infrastructure
 {
+    using System.Web;
+
     public class ObjectToUrlSegments : ObjectToUrl
     {
-
         protected override string PathStartCharacter
         {
-            get { return "/"; }
+            get
+            {
+                return "/";
+            }
         }
 
         protected override string PathSeparatorCharacter
         {
-            get { return "/"; }
+            get
+            {
+                return "/";
+            }
         }
 
         protected override string BuildParam(PropertyValue propertyValue)
         {
-            return System.Web.HttpUtility.UrlEncode(propertyValue.Value);
+            return HttpUtility.UrlEncode(propertyValue.Value);
         }
     }
 }

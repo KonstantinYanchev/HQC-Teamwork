@@ -1,10 +1,9 @@
 #region License
+
 // Distributed under the BSD License
 // =================================
-// 
 // Copyright (c) 2010, Hadi Hariri
 // All rights reserved.
-// 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
 //     * Redistributions of source code must retain the above copyright
@@ -15,7 +14,6 @@
 //     * Neither the name of Hadi Hariri nor the
 //       names of its contributors may be used to endorse or promote products
 //       derived from this software without specific prior written permission.
-// 
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 // ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -28,25 +26,18 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // =============================================================
 // 
-// 
 // Parts of this Software use JsonFX Serialization Library which is distributed under the MIT License:
-// 
 // Distributed under the terms of an MIT-style license:
-// 
 // The MIT License
-// 
 // Copyright (c) 2006-2009 Stephen M. McKamey
-// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -56,114 +47,109 @@
 // THE SOFTWARE.
 #endregion
 
-using System;
-using EasyHttp.Codecs;
-using EasyHttp.Infrastructure;
-using Machine.Specifications;
-
 namespace EasyHttp.Specs.Specs
 {
+    using System;
+
+    using EasyHttp.Codecs;
+    using EasyHttp.Infrastructure;
+
     [Subject("DynamicType")]
     public class when_accessing_a_property_that_is_defined
     {
-        Establish context = () =>
-        {
-            dynamicObject = new DynamicType();
-            
-            dynamicObject.Name = "Joe";
-        };
+        private static dynamic dynamicObject;
 
-        Because of = () =>
-        {
+        private static string value;
 
-            value = dynamicObject.Name;
+        private Establish context = () =>
+            {
+                dynamicObject = new DynamicType();
 
-        };
+                dynamicObject.Name = "Joe";
+            };
 
-        It should_return_the_value = () => value.ShouldEqual("Joe");
+        private Because of = () => { value = dynamicObject.Name; };
 
-        static dynamic dynamicObject;
-        static string value;
+        private It should_return_the_value = () => value.ShouldEqual("Joe");
     }
 
     [Subject("DynamicType")]
     public class when_accessing_a_property_that_is_not_defined
     {
-        Establish context = () =>
-        {
-            dynamicObject = new DynamicType();
+        private static dynamic dynamicObject;
 
-        };
+        private static Exception exception;
 
-        Because of = () =>
-        {
-            string value;
-            exception = Catch.Exception( () => value = dynamicObject.Name );
-        };
+        private Establish context = () => { dynamicObject = new DynamicType(); };
 
-        It should_throw_property_not_found_exception = () => exception.ShouldBeOfType<PropertyNotFoundException>();
+        private Because of = () =>
+            {
+                string value;
+                exception = Catch.Exception(() => value = dynamicObject.Name);
+            };
 
-        It should_set_property_name_to_name_of_property_not_found = () => ((PropertyNotFoundException)exception).PropertyName.ShouldEqual("Name");
+        private It should_set_property_name_to_name_of_property_not_found =
+            () => ((PropertyNotFoundException)exception).PropertyName.ShouldEqual("Name");
 
-        static dynamic dynamicObject;
-        static Exception exception;
+        private It should_throw_property_not_found_exception =
+            () => exception.ShouldBeOfType<PropertyNotFoundException>();
     }
-
 
     [Subject("DynamicType")]
     public class when_accessing_a_property_of_a_child_property_that_is_defined
     {
-        Establish context = () =>
-        {
-            childObject = new DynamicType();
+        private static dynamic childObject;
 
-            childObject.Name = "Child";
+        private static dynamic parentObject;
 
-            parentObject = new DynamicType();
+        private static string value;
 
-            parentObject.Child = childObject;
+        private Establish context = () =>
+            {
+                childObject = new DynamicType();
 
-        };
+                childObject.Name = "Child";
 
-        Because of = () =>
-        {
-            value = parentObject.Child.Name;
-        };
+                parentObject = new DynamicType();
 
-        It should_return_the_value = () => value.ShouldEqual("Child");
+                parentObject.Child = childObject;
+            };
 
-        static dynamic childObject;
-        static dynamic parentObject;
-        static string value;
+        private Because of = () => { value = parentObject.Child.Name; };
+
+        private It should_return_the_value = () => value.ShouldEqual("Child");
     }
 
     [Subject("Infrastructure")]
     public class when_accessing_a_property_of_a_child_property_that_is_not_defined
     {
-        Establish context = () =>
-        {
-            childObject = new DynamicType();
+        private static dynamic childObject;
 
-            parentObject = new DynamicType();
+        private static dynamic parentObject;
 
-            parentObject.Child = childObject;
-        };
+        private static string value;
 
-        Because of = () =>
-        {
-            string value;
-            exception = Catch.Exception(() => value = parentObject.Child.Name);
-        };
+        private static Exception exception;
 
-        It should_throw_property_not_found_exception = () => exception.ShouldBeOfType<PropertyNotFoundException>();
+        private Establish context = () =>
+            {
+                childObject = new DynamicType();
 
-        It should_set_property_name_to_name_of_property_not_found = () => ((PropertyNotFoundException)exception).PropertyName.ShouldEqual("Name");
+                parentObject = new DynamicType();
 
-        static dynamic childObject;
-        static dynamic parentObject;
-        static string value;
-        static Exception exception;
+                parentObject.Child = childObject;
+            };
+
+        private Because of = () =>
+            {
+                string value;
+                exception = Catch.Exception(() => value = parentObject.Child.Name);
+            };
+
+        private It should_set_property_name_to_name_of_property_not_found =
+            () => ((PropertyNotFoundException)exception).PropertyName.ShouldEqual("Name");
+
+        private It should_throw_property_not_found_exception =
+            () => exception.ShouldBeOfType<PropertyNotFoundException>();
     }
-
-   
 }

@@ -1,44 +1,42 @@
-﻿using System.Collections.Generic;
-using EasyHttp.Codecs;
-using EasyHttp.Codecs.JsonFXExtensions;
-using EasyHttp.Http;
-using JsonFx.Json;
-using JsonFx.Serialization;
-using Machine.Specifications;
-
-
-
-
-namespace EasyHttp.Specs.BugRepros
+﻿namespace EasyHttp.Specs.BugRepros
 {
+    using System.Collections.Generic;
+
+    using EasyHttp.Codecs;
+    using EasyHttp.Codecs.JsonFXExtensions;
+    using EasyHttp.Http;
+
     [Subject("Encoding Enums")]
     public class when_encoding_an_object_that_contains_an_enum
     {
+        private static HttpClient client;
 
-        Establish context = () =>
-        {
-            IEnumerable<IDataWriter> writers = new List<IDataWriter> { new JsonWriter(new DataWriterSettings(), "application/.*json") };
+        private static DefaultEncoder _encoder;
 
-            _encoder = new DefaultEncoder(new RegExBasedDataWriterProvider(writers));
-        };
+        private static byte[] result;
 
-        Because of = () =>
-        {
-            var data = new Foo {Baz = Bar.First};
+        private Establish context = () =>
+            {
+                IEnumerable<IDataWriter> writers = new List<IDataWriter>
+                                                       {
+                                                           new JsonWriter(
+                                                               new DataWriterSettings(), 
+                                                               "application/.*json")
+                                                       };
 
-            result = _encoder.Encode(data, "application/vnd.fubar+json");
-        };
+                _encoder = new DefaultEncoder(new RegExBasedDataWriterProvider(writers));
+            };
 
-        It should_encode_correctly = () =>
-        {
-            result.Length.ShouldBeGreaterThan(0);
-        };
+        private Because of = () =>
+            {
+                var data = new Foo { Baz = Bar.First };
 
-        static HttpClient client;
-        static DefaultEncoder _encoder;
-        static byte[] result;
+                result = _encoder.Encode(data, "application/vnd.fubar+json");
+            };
+
+        private It should_encode_correctly = () => { result.Length.ShouldBeGreaterThan(0); };
     }
- 
+
     public class Foo
     {
         public Bar Baz { get; set; }
@@ -46,9 +44,10 @@ namespace EasyHttp.Specs.BugRepros
 
     public enum Bar
     {
-        First,
-        Second,
+        First, 
+
+        Second, 
+
         Third
     }
- 
 }

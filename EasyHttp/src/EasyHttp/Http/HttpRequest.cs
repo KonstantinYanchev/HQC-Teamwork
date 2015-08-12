@@ -1,10 +1,8 @@
 ﻿#region License
 
 // Distributed under the BSD License
-//   
 // YouTrackSharp Copyright (c) 2010-2012, Hadi Hariri and Contributors
 // All rights reserved.
-//   
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
 //      * Redistributions of source code must retain the above copyright
@@ -15,7 +13,6 @@
 //      * Neither the name of Hadi Hariri nor the
 //         names of its contributors may be used to endorse or promote products
 //         derived from this software without specific prior written permission.
-//   
 //   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 //   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 //   TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -27,227 +24,265 @@
 //   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 //   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 //   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//   
-
 #endregion
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Cache;
-using System.Net.Security;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using EasyHttp.Codecs;
-using EasyHttp.Infrastructure;
 
 namespace EasyHttp.Http
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net;
+    using System.Net.Cache;
+    using System.Net.Security;
+    using System.Reflection;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Text;
+
+    using EasyHttp.Codecs;
+    using EasyHttp.Infrastructure;
+
     // TODO: This class needs cleaning up and abstracting the encoder one more level
     public class HttpRequest
     {
-        readonly IEncoder _encoder;
-        HttpRequestCachePolicy _cachePolicy;
-        bool _forceBasicAuth;
-        string _password;
-        string _username;
-        HttpWebRequest httpWebRequest;
-        CookieContainer cookieContainer;
+        private readonly IEncoder _encoder;
+
+        private HttpRequestCachePolicy _cachePolicy;
+
+        private string _password;
+
+        private string _username;
+
+        private CookieContainer cookieContainer;
+
+        private HttpWebRequest httpWebRequest;
 
         public HttpRequest(IEncoder encoder)
         {
-            RawHeaders = new Dictionary<string, object>();
+            this.RawHeaders = new Dictionary<string, object>();
 
-            ClientCertificates = new X509CertificateCollection();
+            this.ClientCertificates = new X509CertificateCollection();
 
-            UserAgent = String.Format("EasyHttp HttpClient v{0}",
-                                      Assembly.GetAssembly(typeof (HttpClient)).GetName().Version);
+            this.UserAgent = string.Format(
+                "EasyHttp HttpClient v{0}", 
+                Assembly.GetAssembly(typeof(HttpClient)).GetName().Version);
 
-            Accept = String.Join(";", HttpContentTypes.TextHtml, HttpContentTypes.ApplicationXml,
-                                 HttpContentTypes.ApplicationJson);
-            _encoder = encoder;
+            this.Accept = string.Join(
+                ";", 
+                HttpContentTypes.TextHtml, 
+                HttpContentTypes.ApplicationXml, 
+                HttpContentTypes.ApplicationJson);
+            this._encoder = encoder;
 
-            Timeout = 100000; //http://msdn.microsoft.com/en-us/library/system.net.httpwebrequest.timeout.aspx
+            this.Timeout = 100000; // http://msdn.microsoft.com/en-us/library/system.net.httpwebrequest.timeout.aspx
 
-            AllowAutoRedirect = true;
+            this.AllowAutoRedirect = true;
         }
 
         public string Accept { get; set; }
-        public string AcceptCharSet { get; set; }
-        public string AcceptEncoding { get; set; }
-        public string AcceptLanguage { get; set; }
-        public bool KeepAlive { get; set; }
-        public X509CertificateCollection ClientCertificates { get; set; }
-        public string ContentLength { get; private set; }
-        public string ContentType { get; set; }
-        public string ContentEncoding { get; set; }
-        public CookieCollection Cookies { get; set; }
-        public DateTime Date { get; set; }
-        public bool Expect { get; set; }
-        public string From { get; set; }
-        public string Host { get; set; }
-        public string IfMatch { get; set; }
-        public DateTime IfModifiedSince { get; set; }
-        public string IfRange { get; set; }
-        public int MaxForwards { get; set; }
-        public string Referer { get; set; }
-        public int Range { get; set; }
-        public string UserAgent { get; set; }
-        public IDictionary<string, object> RawHeaders { get; private set; }
-        public HttpMethod Method { get; set; }
-        public object Data { get; set; }
-        public string Uri { get; set; }
-        public string PutFilename { get; set; }
-        public IDictionary<string, object> MultiPartFormData { get; set; }
-        public IList<FileData> MultiPartFileData { get; set; }
-        public int Timeout { get; set; }
-        public Boolean ParametersAsSegments { get; set; }
 
-        public bool ForceBasicAuth
-        {
-            get { return _forceBasicAuth; }
-            set { _forceBasicAuth = value; }
-        }
+        public string AcceptCharSet { get; set; }
+
+        public string AcceptEncoding { get; set; }
+
+        public string AcceptLanguage { get; set; }
+
+        public bool KeepAlive { get; set; }
+
+        public X509CertificateCollection ClientCertificates { get; set; }
+
+        public string ContentLength { get; private set; }
+
+        public string ContentType { get; set; }
+
+        public string ContentEncoding { get; set; }
+
+        public CookieCollection Cookies { get; set; }
+
+        public DateTime Date { get; set; }
+
+        public bool Expect { get; set; }
+
+        public string From { get; set; }
+
+        public string Host { get; set; }
+
+        public string IfMatch { get; set; }
+
+        public DateTime IfModifiedSince { get; set; }
+
+        public string IfRange { get; set; }
+
+        public int MaxForwards { get; set; }
+
+        public string Referer { get; set; }
+
+        public int Range { get; set; }
+
+        public string UserAgent { get; set; }
+
+        public IDictionary<string, object> RawHeaders { get; private set; }
+
+        public HttpMethod Method { get; set; }
+
+        public object Data { get; set; }
+
+        public string Uri { get; set; }
+
+        public string PutFilename { get; set; }
+
+        public IDictionary<string, object> MultiPartFormData { get; set; }
+
+        public IList<FileData> MultiPartFileData { get; set; }
+
+        public int Timeout { get; set; }
+
+        public bool ParametersAsSegments { get; set; }
+
+        public bool ForceBasicAuth { get; set; }
 
         public bool PersistCookies { get; set; }
+
         public bool AllowAutoRedirect { get; set; }
 
         public void SetBasicAuthentication(string username, string password)
         {
-            _username = username;
-            _password = password;
+            this._username = username;
+            this._password = password;
         }
 
-        void SetupHeader()
+        private void SetupHeader()
         {
-            if(!PersistCookies || cookieContainer == null)
-                cookieContainer = new CookieContainer();
-
-            httpWebRequest.CookieContainer = cookieContainer;
-            httpWebRequest.ContentType = ContentType;
-            httpWebRequest.Accept = Accept;
-            httpWebRequest.Method = Method.ToString();
-            httpWebRequest.UserAgent = UserAgent;
-            httpWebRequest.Referer = Referer;
-            httpWebRequest.CachePolicy = _cachePolicy;
-            httpWebRequest.KeepAlive = KeepAlive;
-            httpWebRequest.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip | DecompressionMethods.None;
-
-            ServicePointManager.Expect100Continue = Expect;
-            ServicePointManager.ServerCertificateValidationCallback = AcceptAllCertifications;
-
-            if (Timeout > 0)
+            if (!this.PersistCookies || this.cookieContainer == null)
             {
-                httpWebRequest.Timeout = Timeout;
+                this.cookieContainer = new CookieContainer();
             }
 
+            this.httpWebRequest.CookieContainer = this.cookieContainer;
+            this.httpWebRequest.ContentType = this.ContentType;
+            this.httpWebRequest.Accept = this.Accept;
+            this.httpWebRequest.Method = this.Method.ToString();
+            this.httpWebRequest.UserAgent = this.UserAgent;
+            this.httpWebRequest.Referer = this.Referer;
+            this.httpWebRequest.CachePolicy = this._cachePolicy;
+            this.httpWebRequest.KeepAlive = this.KeepAlive;
+            this.httpWebRequest.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
+                                                         | DecompressionMethods.None;
 
-            if (Cookies != null)
+            ServicePointManager.Expect100Continue = this.Expect;
+            ServicePointManager.ServerCertificateValidationCallback = this.AcceptAllCertifications;
+
+            if (this.Timeout > 0)
             {
-                httpWebRequest.CookieContainer.Add(Cookies);
+                this.httpWebRequest.Timeout = this.Timeout;
             }
 
-            if (IfModifiedSince != DateTime.MinValue)
+            if (this.Cookies != null)
             {
-                httpWebRequest.IfModifiedSince = IfModifiedSince;
+                this.httpWebRequest.CookieContainer.Add(this.Cookies);
             }
 
-
-            if (Date != DateTime.MinValue)
+            if (this.IfModifiedSince != DateTime.MinValue)
             {
-                httpWebRequest.Date = Date;
+                this.httpWebRequest.IfModifiedSince = this.IfModifiedSince;
             }
 
-            if (!String.IsNullOrEmpty(Host))
+            if (this.Date != DateTime.MinValue)
             {
-                httpWebRequest.Host = Host;
+                this.httpWebRequest.Date = this.Date;
             }
 
-            if (MaxForwards != 0)
+            if (!string.IsNullOrEmpty(this.Host))
             {
-                httpWebRequest.MaximumAutomaticRedirections = MaxForwards;
+                this.httpWebRequest.Host = this.Host;
             }
 
-            if (Range != 0)
+            if (this.MaxForwards != 0)
             {
-                httpWebRequest.AddRange(Range);
+                this.httpWebRequest.MaximumAutomaticRedirections = this.MaxForwards;
             }
 
-            SetupAuthentication();
-
-            AddExtraHeader("From", From);
-            AddExtraHeader("Accept-CharSet", AcceptCharSet);
-            AddExtraHeader("Accept-Encoding", AcceptEncoding);
-            AddExtraHeader("Accept-Language", AcceptLanguage);
-            AddExtraHeader("If-Match", IfMatch);
-            AddExtraHeader("Content-Encoding", ContentEncoding);
-
-            foreach (var header in RawHeaders)
+            if (this.Range != 0)
             {
-                httpWebRequest.Headers.Add(String.Format("{0}: {1}", header.Key, header.Value));
+                this.httpWebRequest.AddRange(this.Range);
+            }
+
+            this.SetupAuthentication();
+
+            this.AddExtraHeader("From", this.From);
+            this.AddExtraHeader("Accept-CharSet", this.AcceptCharSet);
+            this.AddExtraHeader("Accept-Encoding", this.AcceptEncoding);
+            this.AddExtraHeader("Accept-Language", this.AcceptLanguage);
+            this.AddExtraHeader("If-Match", this.IfMatch);
+            this.AddExtraHeader("Content-Encoding", this.ContentEncoding);
+
+            foreach (var header in this.RawHeaders)
+            {
+                this.httpWebRequest.Headers.Add(string.Format("{0}: {1}", header.Key, header.Value));
             }
         }
 
-        bool AcceptAllCertifications(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
+        private bool AcceptAllCertifications(
+            object sender, 
+            X509Certificate certificate, 
+            X509Chain chain, 
+            SslPolicyErrors sslpolicyerrors)
         {
             return true;
         }
 
         public void AddExtraHeader(string header, object value)
         {
-            if (value != null && !RawHeaders.ContainsKey(header))
+            if (value != null && !this.RawHeaders.ContainsKey(header))
             {
-                RawHeaders.Add(header, value);
+                this.RawHeaders.Add(header, value);
             }
         }
 
-        void SetupBody()
+        private void SetupBody()
         {
-            if (Data != null)
+            if (this.Data != null)
             {
-                SetupData();
+                this.SetupData();
 
                 return;
             }
 
-            if (!String.IsNullOrEmpty(PutFilename))
+            if (!string.IsNullOrEmpty(this.PutFilename))
             {
-                SetupPutFilename();
+                this.SetupPutFilename();
                 return;
             }
 
-            if (MultiPartFormData != null || MultiPartFileData != null)
+            if (this.MultiPartFormData != null || this.MultiPartFileData != null)
             {
-                SetupMultiPartBody();
+                this.SetupMultiPartBody();
             }
         }
 
-        void SetupData()
+        private void SetupData()
         {
-            var bytes = _encoder.Encode(Data, ContentType);
+            var bytes = this._encoder.Encode(this.Data, this.ContentType);
 
             if (bytes.Length > 0)
             {
-                httpWebRequest.ContentLength = bytes.Length;
+                this.httpWebRequest.ContentLength = bytes.Length;
             }
 
-            var requestStream = httpWebRequest.GetRequestStream();
+            var requestStream = this.httpWebRequest.GetRequestStream();
 
             requestStream.Write(bytes, 0, bytes.Length);
 
             requestStream.Close();
         }
 
-        void SetupPutFilename()
+        private void SetupPutFilename()
         {
-            using (var fileStream = new FileStream(PutFilename, FileMode.Open))
+            using (var fileStream = new FileStream(this.PutFilename, FileMode.Open))
             {
-                httpWebRequest.ContentLength = fileStream.Length;
-                
-                var requestStream = httpWebRequest.GetRequestStream();
-                
+                this.httpWebRequest.ContentLength = fileStream.Length;
+
+                var requestStream = this.httpWebRequest.GetRequestStream();
+
                 var buffer = new byte[81982];
 
                 int bytesRead = fileStream.Read(buffer, 0, buffer.Length);
@@ -256,84 +291,82 @@ namespace EasyHttp.Http
                     requestStream.Write(buffer, 0, bytesRead);
                     bytesRead = fileStream.Read(buffer, 0, buffer.Length);
                 }
+
                 requestStream.Close();
             }
         }
 
-   
-       
-        void SetupMultiPartBody()
+        private void SetupMultiPartBody()
         {
-            var multiPartStreamer = new MultiPartStreamer(MultiPartFormData, MultiPartFileData);
+            var multiPartStreamer = new MultiPartStreamer(this.MultiPartFormData, this.MultiPartFileData);
 
-            httpWebRequest.ContentType = multiPartStreamer.GetContentType();
+            this.httpWebRequest.ContentType = multiPartStreamer.GetContentType();
             var contentLength = multiPartStreamer.GetContentLength();
-            
+
             if (contentLength > 0)
             {
-                httpWebRequest.ContentLength = contentLength;
+                this.httpWebRequest.ContentLength = contentLength;
             }
 
-            multiPartStreamer.StreamMultiPart(httpWebRequest.GetRequestStream());
-
+            multiPartStreamer.StreamMultiPart(this.httpWebRequest.GetRequestStream());
         }
-
 
         public HttpWebRequest PrepareRequest()
         {
-            httpWebRequest = (HttpWebRequest) WebRequest.Create(Uri);
-            httpWebRequest.AllowAutoRedirect = AllowAutoRedirect;
-            SetupHeader();
+            this.httpWebRequest = (HttpWebRequest)WebRequest.Create(this.Uri);
+            this.httpWebRequest.AllowAutoRedirect = this.AllowAutoRedirect;
+            this.SetupHeader();
 
-            SetupBody();
+            this.SetupBody();
 
-            return httpWebRequest;
+            return this.httpWebRequest;
         }
 
-        void SetupClientCertificates()
+        private void SetupClientCertificates()
         {
-            if (ClientCertificates == null || ClientCertificates.Count == 0)
-                return;
-
-            httpWebRequest.ClientCertificates.AddRange(ClientCertificates);
-        }
-
-        void SetupAuthentication()
-        {
-            SetupClientCertificates();
-
-            if (_forceBasicAuth)
+            if (this.ClientCertificates == null || this.ClientCertificates.Count == 0)
             {
-                string authInfo = _username + ":" + _password;
+                return;
+            }
+
+            this.httpWebRequest.ClientCertificates.AddRange(this.ClientCertificates);
+        }
+
+        private void SetupAuthentication()
+        {
+            this.SetupClientCertificates();
+
+            if (this.ForceBasicAuth)
+            {
+                string authInfo = this._username + ":" + this._password;
                 authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
-                httpWebRequest.Headers["Authorization"] = "Basic " + authInfo;
+                this.httpWebRequest.Headers["Authorization"] = "Basic " + authInfo;
             }
             else
             {
-                var networkCredential = new NetworkCredential(_username, _password);
-                httpWebRequest.Credentials = networkCredential;
+                var networkCredential = new NetworkCredential(this._username, this._password);
+                this.httpWebRequest.Credentials = networkCredential;
             }
         }
 
-
         public void SetCacheControlToNoCache()
         {
-            _cachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+            this._cachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
         }
 
         public void SetCacheControlWithMaxAge(TimeSpan maxAge)
         {
-            _cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAge, maxAge);
+            this._cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAge, maxAge);
         }
 
         public void SetCacheControlWithMaxAgeAndMaxStale(TimeSpan maxAge, TimeSpan maxStale)
         {
-            _cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAgeAndMaxStale, maxAge, maxStale);
+            this._cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAgeAndMaxStale, maxAge, maxStale);
         }
 
         public void SetCacheControlWithMaxAgeAndMinFresh(TimeSpan maxAge, TimeSpan minFresh)
         {
-            _cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAgeAndMinFresh, maxAge, minFresh);
+            this._cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAgeAndMinFresh, maxAge, minFresh);
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿#region License
+
 // Distributed under the BSD License
 // =================================
-// 
 // Copyright (c) 2010, Hadi Hariri
 // All rights reserved.
-// 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
 //     * Redistributions of source code must retain the above copyright
@@ -15,7 +14,6 @@
 //     * Neither the name of Hadi Hariri nor the
 //       names of its contributors may be used to endorse or promote products
 //       derived from this software without specific prior written permission.
-// 
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 // ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -28,25 +26,18 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // =============================================================
 // 
-// 
 // Parts of this Software use JsonFX Serialization Library which is distributed under the MIT License:
-// 
 // Distributed under the terms of an MIT-style license:
-// 
 // The MIT License
-// 
 // Copyright (c) 2006-2009 Stephen M. McKamey
-// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -56,327 +47,305 @@
 // THE SOFTWARE.
 #endregion
 
-using System;
-using System.Net;
-using EasyHttp.Http;
-using EasyHttp.Specs.Helpers;
-using Machine.Specifications;
 using Result = EasyHttp.Specs.Helpers.ResultResponse;
 
 namespace EasyHttp.Specs.Specs
 {
+    using System;
+    using System.Net;
+
+    using EasyHttp.Http;
+    using EasyHttp.Specs.Helpers;
+
     [Subject("HttpClient")]
     public class when_making_any_type_of_request_to_invalid_host
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
-            exception = Catch.Exception( () => httpClient.Get("http://somethinginvalid") );
+        private static Exception exception;
 
-        };
+        private Establish context = () => { httpClient = new HttpClient(); };
 
-        It should_throw_web_exception  = () => exception.ShouldBeOfType<WebException>();
+        private Because of = () => { exception = Catch.Exception(() => httpClient.Get("http://somethinginvalid")); };
 
-        static HttpClient httpClient;
-        static Exception exception;
+        private It should_throw_web_exception = () => exception.ShouldBeOfType<WebException>();
     }
 
     [Subject("HttpClient")]
-    public class when_making_a_DELETE_request_with_a_valid_uri 
+    public class when_making_a_DELETE_request_with_a_valid_uri
     {
         // TODO: Implement me
+        private static HttpClient httpClient;
 
-        static HttpClient httpClient;
-        static dynamic response;
-        static string rev;
-        static Guid guid;
+        private static dynamic response;
+
+        private static string rev;
+
+        private static Guid guid;
     }
 
     [Subject("HttpClient")]
     public class when_making_a_GET_request_with_valid_uri
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
-            httpResponse = httpClient.Get("http://localhost:16000");
+        private static HttpResponse httpResponse;
 
-        };
+        private Establish context = () => { httpClient = new HttpClient(); };
 
-        It should_return_body_with_rawtext =
-            () => httpResponse.RawText.ShouldNotBeEmpty();
+        private Because of = () => { httpResponse = httpClient.Get("http://localhost:16000"); };
 
-    
-        static HttpClient httpClient;
-        static HttpResponse httpResponse;
+        private It should_return_body_with_rawtext = () => httpResponse.RawText.ShouldNotBeEmpty();
     }
 
     [Subject("HttpClient")]
     public class when_making_a_GET_request_with_valid_uri_and__and_valid_parameters
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-            httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
-            response = httpClient.Get("http://localhost:16000/hello", new { Name = "true" });
-        };
+        private static dynamic response;
 
+        private Establish context = () =>
+            {
+                httpClient = new HttpClient();
+                httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
+            };
 
-        It should_return_dynamic_body_with_json_object = () =>
-        {
-            dynamic body = response.DynamicBody;
+        private Because of = () => { response = httpClient.Get("http://localhost:16000/hello", new { Name = "true" }); };
 
-            string couchdb = body.Result;
+        private It should_return_dynamic_body_with_json_object = () =>
+            {
+                dynamic body = response.DynamicBody;
 
-            couchdb.ShouldEqual("Hello, true");
+                string couchdb = body.Result;
 
-        };
-
-        static HttpClient httpClient;
-        static dynamic response;
+                couchdb.ShouldEqual("Hello, true");
+            };
     }
 
     [Subject("HttpClient")]
     public class when_making_a_GET_request_with_valid_uri_and__and_valid_parameters_using_segments
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-            httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
-            httpClient.Request.ParametersAsSegments = true;
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
-            response = httpClient.Get("http://localhost:16000/hello", new { Name = "true" });
-        };
+        private static dynamic response;
 
+        private Establish context = () =>
+            {
+                httpClient = new HttpClient();
+                httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
+                httpClient.Request.ParametersAsSegments = true;
+            };
 
-        It should_return_dynamic_body_with_json_object = () =>
-        {
-            dynamic body = response.DynamicBody;
+        private Because of = () => { response = httpClient.Get("http://localhost:16000/hello", new { Name = "true" }); };
 
-            string couchdb = body.Result;
+        private It should_return_dynamic_body_with_json_object = () =>
+            {
+                dynamic body = response.DynamicBody;
 
-            couchdb.ShouldEqual("Hello, true");
+                string couchdb = body.Result;
 
-        };
-
-        static HttpClient httpClient;
-        static dynamic response;
+                couchdb.ShouldEqual("Hello, true");
+            };
     }
 
     [Subject("HttpClient")]
     public class when_making_a_GET_request_with_valid_uri_and_content_type_set_to_application_json
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-            httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
+        private static HttpClient httpClient;
 
-        };
+        private static HttpResponse response;
 
-        Because of = () =>
-        {
+        private Establish context = () =>
+            {
+                httpClient = new HttpClient();
+                httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
+            };
 
-            response = httpClient.Get("http://localhost:16000/hello");
+        private Because of = () => { response = httpClient.Get("http://localhost:16000/hello"); };
 
-        };
+        private It should_return_dynamic_body_with_json_object = () =>
+            {
+                dynamic body = response.DynamicBody;
 
+                string result = body.Result;
 
-        It should_return_dynamic_body_with_json_object = () =>
-        {
-            dynamic body = response.DynamicBody;
+                result.ShouldEqual("Hello, ");
+            };
 
-            string result = body.Result;
+        private It should_return_static_body_with_json_object = () =>
+            {
+                var couchInformation = response.StaticBody<ResultResponse>();
 
-            result.ShouldEqual("Hello, ");
-
-        };
-
-
-        It should_return_static_body_with_json_object = () =>
-        {
-            var couchInformation = response.StaticBody<ResultResponse>();
-
-            couchInformation.Result.ShouldEqual("Hello, ");
-
-        };
-
-        static HttpClient httpClient;
-        static HttpResponse response;
+                couchInformation.Result.ShouldEqual("Hello, ");
+            };
     }
 
-  
     [Subject("HttpClient")]
     public class when_making_a_HEAD_request_with_valid_uri
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
-            response = httpClient.Head("http://localhost:16000");
+        private static HttpResponse response;
 
-        };
+        private Establish context = () => { httpClient = new HttpClient(); };
 
-        It should_return_OK_response  =
-            () => response.StatusDescription.ShouldEqual("OK");
+        private Because of = () => { response = httpClient.Head("http://localhost:16000"); };
 
-        static HttpClient httpClient;
-        static HttpResponse response;
+        private It should_return_OK_response = () => response.StatusDescription.ShouldEqual("OK");
     }
 
     [Subject("HttpClient")]
     public class when_making_a_POST_request_with_valid_uri_and_valid_data_and_content_type_set_to_application_json
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-            httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
+        private static HttpClient httpClient;
 
-        };
+        private static dynamic response;
 
-        Because of = () =>
-        {
+        private Establish context = () =>
+            {
+                httpClient = new HttpClient();
+                httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
+            };
 
-            response = httpClient.Post("http://localhost:16000/hello", new Customer() { Name = "Hadi"}, HttpContentTypes.ApplicationJson);
+        private Because of =
+            () =>
+                {
+                    response = httpClient.Post(
+                        "http://localhost:16000/hello", 
+                        new Customer { Name = "Hadi" }, 
+                        HttpContentTypes.ApplicationJson);
+                };
 
-        };
+        private It should_succeed = () =>
+            {
+                string id = response.DynamicBody.Result;
 
-        It should_succeed = () =>
-        {
-            string id = response.DynamicBody.Result;
-
-            id.ShouldNotBeEmpty();
-        };
-
-        static HttpClient httpClient;
-        static dynamic response;
+                id.ShouldNotBeEmpty();
+            };
     }
 
     [Subject("HttpClient")]
-    public class when_making_a_POST_request_with_valid_uri_and_valid_data_and_content_type_set_to_application_json_and_parameters_as_segments
+    public class
+        when_making_a_POST_request_with_valid_uri_and_valid_data_and_content_type_set_to_application_json_and_parameters_as_segments
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-            httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
-            httpClient.Request.ParametersAsSegments = true;
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
+        private static dynamic response;
 
-            response = httpClient.Post("http://localhost:16000/hello", new Customer() { Name = "Hadi" }, HttpContentTypes.ApplicationJson);
+        private Establish context = () =>
+            {
+                httpClient = new HttpClient();
+                httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
+                httpClient.Request.ParametersAsSegments = true;
+            };
 
-        };
+        private Because of =
+            () =>
+                {
+                    response = httpClient.Post(
+                        "http://localhost:16000/hello", 
+                        new Customer { Name = "Hadi" }, 
+                        HttpContentTypes.ApplicationJson);
+                };
 
-        It should_succeed = () =>
-        {
-            string id = response.DynamicBody.Result;
+        private It should_succeed = () =>
+            {
+                string id = response.DynamicBody.Result;
 
-            id.ShouldNotBeEmpty();
-        };
-
-        static HttpClient httpClient;
-        static dynamic response;
+                id.ShouldNotBeEmpty();
+            };
     }
 
     [Subject("HttpClient")]
     public class when_making_a_PUT_request_with_valid_uri_and_valid_data_and_content_type_set_to_application_json
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-            httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
-            response = httpClient.Put(string.Format("{0}/{1}", "http://localhost:16000", "hello"),
-                          new Customer() { Name = "Put"}, HttpContentTypes.ApplicationJson);
+        private static dynamic response;
 
-        };
+        private Establish context = () =>
+            {
+                httpClient = new HttpClient();
+                httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
+            };
 
+        private Because of =
+            () =>
+                {
+                    response = httpClient.Put(
+                        string.Format("{0}/{1}", "http://localhost:16000", "hello"), 
+                        new Customer { Name = "Put" }, 
+                        HttpContentTypes.ApplicationJson);
+                };
 
-        It should_succeed = () =>
-        {
-            string result = response.DynamicBody.Result;
+        private It should_succeed = () =>
+            {
+                string result = response.DynamicBody.Result;
 
-            result.ShouldNotBeEmpty();
-        };
-
-        static HttpClient httpClient;
-        static dynamic response;
+                result.ShouldNotBeEmpty();
+            };
     }
 
     [Subject("HttpClient")]
     public class when_making_requests_and_persisting_cookies
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-            httpClient.Request.PersistCookies = true;
-            httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
-            httpClient.Put("http://localhost:16000/cookie", new CookieInfo { Name = "test", Value = "test cookie" }, HttpContentTypes.ApplicationJson);
-            response = httpClient.Get("http://localhost:16000/cookie/test");
-        };
+        private static dynamic response;
 
+        private Establish context = () =>
+            {
+                httpClient = new HttpClient();
+                httpClient.Request.PersistCookies = true;
+                httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
+            };
 
-        It should_send_returned_cookies = () =>
-        {
-            string cookieValue = response.DynamicBody.Value;
+        private Because of = () =>
+            {
+                httpClient.Put(
+                    "http://localhost:16000/cookie", 
+                    new CookieInfo { Name = "test", Value = "test cookie" }, 
+                    HttpContentTypes.ApplicationJson);
+                response = httpClient.Get("http://localhost:16000/cookie/test");
+            };
 
-            cookieValue.ShouldEqual("test cookie");
-        };
+        private It should_send_returned_cookies = () =>
+            {
+                string cookieValue = response.DynamicBody.Value;
 
-        static HttpClient httpClient;
-        static dynamic response;
+                cookieValue.ShouldEqual("test cookie");
+            };
     }
 
     [Subject("HttpClient")]
     public class when_making_requests_and_not_persisting_cookies
     {
-        Establish context = () =>
-        {
-            httpClient = new HttpClient();
-            httpClient.Request.PersistCookies = false;
-            httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
-        };
+        private static HttpClient httpClient;
 
-        Because of = () =>
-        {
-            httpClient.Put("http://localhost:16000/cookie", new CookieInfo { Name = "test", Value = "test cookie" }, HttpContentTypes.ApplicationJson);
-            response = httpClient.Get("http://localhost:16000/cookie/test");
-        };
+        private static dynamic response;
 
+        private Establish context = () =>
+            {
+                httpClient = new HttpClient();
+                httpClient.Request.PersistCookies = false;
+                httpClient.Request.Accept = HttpContentTypes.ApplicationJson;
+            };
 
-        It should_not_send_returned_cookies = () =>
-        {
-            HttpStatusCode statusCode = response.StatusCode;
+        private Because of = () =>
+            {
+                httpClient.Put(
+                    "http://localhost:16000/cookie", 
+                    new CookieInfo { Name = "test", Value = "test cookie" }, 
+                    HttpContentTypes.ApplicationJson);
+                response = httpClient.Get("http://localhost:16000/cookie/test");
+            };
 
-            statusCode.ShouldEqual(HttpStatusCode.NotFound);
-        };
+        private It should_not_send_returned_cookies = () =>
+            {
+                HttpStatusCode statusCode = response.StatusCode;
 
-        static HttpClient httpClient;
-        static dynamic response;
+                statusCode.ShouldEqual(HttpStatusCode.NotFound);
+            };
     }
 }
