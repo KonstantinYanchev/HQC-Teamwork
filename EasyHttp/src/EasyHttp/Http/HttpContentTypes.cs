@@ -49,6 +49,9 @@
 
 namespace EasyHttp.Http
 {
+    /// <summary>
+    /// Types of Http contents.
+    /// </summary>
     public static class HttpContentTypes
     {
         public const string MultiPartFormData = "multipart/form-data";

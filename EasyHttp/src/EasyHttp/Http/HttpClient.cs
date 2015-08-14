@@ -56,7 +56,9 @@ namespace EasyHttp.Http
     using EasyHttp.Configuration;
     using EasyHttp.Exceptions;
     using EasyHttp.Infrastructure;
-
+    /// <summary>
+    /// Client for sending Http request and Http responses.
+    /// </summary>
     public class HttpClient
     {
         private readonly string _baseUri;
@@ -67,11 +69,18 @@ namespace EasyHttp.Http
 
         private readonly UriComposer _uriComposer;
 
+        /// <summary>
+        /// Client for sending Http request and Http responses.
+        /// </summary>
         public HttpClient()
             : this(new DefaultEncoderDecoderConfiguration())
         {
         }
 
+        /// <summary>
+        /// Client for sending Http request and Http responses.
+        /// </summary>
+        /// <param name="encoderDecoderConfiguration">Configuration for getting encoder and decoder.</param>
         public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration)
         {
             this._encoder = encoderDecoderConfiguration.GetEncoder();
@@ -81,22 +90,47 @@ namespace EasyHttp.Http
             this.Request = new HttpRequest(this._encoder);
         }
 
+        /// <summary>
+        /// Client for sending Http request and Http responses. 
+        /// </summary>
+        /// <param name="baseUri">URI to which  the Http requests will be directed.</param>
         public HttpClient(string baseUri)
             : this(new DefaultEncoderDecoderConfiguration())
         {
             this._baseUri = baseUri;
         }
 
+        /// <summary>
+        /// Is logging enabled.
+        /// </summary>
         public bool LoggingEnabled { get; set; }
 
+        /// <summary>
+        /// Should exception be thrown from Http error.
+        /// </summary>
         public bool ThrowExceptionOnHttpError { get; set; }
 
+        /// <summary>
+        /// Is the response a stream?
+        /// </summary>
         public bool StreamResponse { get; set; }
 
+        /// <summary>
+        /// Http response.
+        /// </summary>
         public HttpResponse Response { get; private set; }
 
+        /// <summary>
+        /// Http request.
+        /// </summary>
         public HttpRequest Request { get; private set; }
 
+        /// <summary>
+        /// Initialize the Http request. 
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="method">Http method for sending the request.</param>
+        /// <param name="query">Reqest query.</param>
         private void InitRequest(string uri, HttpMethod method, object query)
         {
             this.Request.Uri = this._uriComposer.Compose(this._baseUri, uri, query, this.Request.ParametersAsSegments);
@@ -110,33 +144,65 @@ namespace EasyHttp.Http
             this.Request.Method = method;
         }
 
+        /// <summary>
+        /// Http request for getting a file.
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="filename">The name of the file that should be recived.</param>
+        /// <returns>Http response.</returns>
         public HttpResponse GetAsFile(string uri, string filename)
         {
             this.InitRequest(uri, HttpMethod.GET, null);
             return this.ProcessRequest(filename);
         }
 
+        /// <summary>
+        /// Http get request.
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="query">Request query.</param>
+        /// <returns>Http response.</returns>
         public HttpResponse Get(string uri, object query = null)
         {
             this.InitRequest(uri, HttpMethod.GET, query);
             return this.ProcessRequest();
         }
 
+        /// <summary>
+        /// Http options request.
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <returns>Http response.</returns>
         public HttpResponse Options(string uri)
         {
             this.InitRequest(uri, HttpMethod.OPTIONS, null);
             return this.ProcessRequest();
         }
 
+        /// <summary>
+        /// Http post request.
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="data">Posted data.</param>
+        /// <param name="contentType">Content type of posted data.</param>
+        /// <param name="query">request query.</param>
+        /// <returns>Http response.</returns>
         public HttpResponse Post(string uri, object data, string contentType, object query = null)
         {
-            return null;
-
-            // InitRequest(uri, HttpMethod.POST, query);
-            // InitData(data, contentType);
-            // return ProcessRequest();
+            // return null;
+             this.InitRequest(uri, HttpMethod.POST, query);
+             this.InitData(data, contentType);
+             return ProcessRequest();
         }
-
+        
+        /// <summary>
+        /// Http patch request.
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="data">Data sent.</param>
+        /// <param name="contentType">Content type of posted data.</param>
+        /// <param name="query">request query.</param>
+        /// <returns>Http response.</returns>
         public HttpResponse Patch(string uri, object data, string contentType, object query = null)
         {
             this.InitRequest(uri, HttpMethod.PATCH, query);
@@ -144,6 +210,14 @@ namespace EasyHttp.Http
             return this.ProcessRequest();
         }
 
+        /// <summary>
+        /// Http post request with files.
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="formData">Data sent.</param>
+        /// <param name="files">Files sent.</param>
+        /// <param name="query">Request query.</param>
+        /// <returns>Http response.</returns>
         public HttpResponse Post(
             string uri,
             IDictionary<string, object> formData,
@@ -157,6 +231,14 @@ namespace EasyHttp.Http
             return this.ProcessRequest();
         }
 
+        /// <summary>
+        /// Http put request.
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="data">Data sent.</param>
+        /// <param name="contentType">Content type of the data.</param>
+        /// <param name="query">Request query.</param>
+        /// <returns>Http response.</returns>
         public HttpResponse Put(string uri, object data, string contentType, object query = null)
         {
             this.InitRequest(uri, HttpMethod.PUT, query);
@@ -164,6 +246,11 @@ namespace EasyHttp.Http
             return this.ProcessRequest();
         }
 
+        /// <summary>
+        /// Initialize request data.
+        /// </summary>
+        /// <param name="data">Data that is initialized.</param>
+        /// <param name="contentType">Content type of the data.</param>
         private void InitData(object data, string contentType)
         {
             if (data != null)
@@ -173,18 +260,37 @@ namespace EasyHttp.Http
             }
         }
 
+        /// <summary>
+        /// Http Delete request.
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="query">Request query.</param>
+        /// <returns>Http response.</returns>
         public HttpResponse Delete(string uri, object query = null)
         {
             this.InitRequest(uri, HttpMethod.DELETE, query);
             return this.ProcessRequest();
         }
 
+        /// <summary>
+        /// Http head reqest.
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="query">Request query.</param>
+        /// <returns>Http response.</returns>
         public HttpResponse Head(string uri, object query = null)
         {
             this.InitRequest(uri, HttpMethod.HEAD, query);
             return this.ProcessRequest();
         }
 
+        /// <summary>
+        /// Http put file request.
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="filename">Name of the file for request.</param>
+        /// <param name="contentType">Content type of the file.</param>
+        /// <returns>Http request.</returns>
         public HttpResponse PutFile(string uri, string filename, string contentType)
         {
             this.InitRequest(uri, HttpMethod.PUT, null);
@@ -195,6 +301,11 @@ namespace EasyHttp.Http
             return this.ProcessRequest();
         }
 
+        /// <summary>
+        /// Method for proccesing an Http request.
+        /// </summary>
+        /// <param name="filename">File name.</param>
+        /// <returns>Http response.</returns>
         private HttpResponse ProcessRequest(string filename = "")
         {
             var httpWebRequest = this.Request.PrepareRequest();
@@ -211,6 +322,10 @@ namespace EasyHttp.Http
             return this.Response;
         }
 
+        /// <summary>
+        /// Method for adding client certificates.
+        /// </summary>
+        /// <param name="certificates">Certificates for adding.</param>
         public void AddClientCertificates(X509CertificateCollection certificates)
         {
             if (certificates == null || certificates.Count == 0)
@@ -221,6 +336,10 @@ namespace EasyHttp.Http
             this.Request.ClientCertificates.AddRange(certificates);
         }
 
+        /// <summary>
+        /// Method for checking is the response status code is an error.
+        /// </summary>
+        /// <returns>True if there is an error. Otherwise returns false.</returns>
         private bool IsHttpError()
         {
             var num = (int)this.Response.StatusCode / 100;

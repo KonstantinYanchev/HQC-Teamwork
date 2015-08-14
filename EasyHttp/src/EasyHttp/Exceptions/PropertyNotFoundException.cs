@@ -52,29 +52,53 @@ namespace EasyHttp.Exceptions
     using System;
     using System.Runtime.Serialization;
 
+    /// <summary>
+    /// Represents error that occure when a property is not found.
+    /// </summary>
     [Serializable]
     public class PropertyNotFoundException : Exception
     {
+        /// <summary>
+        /// Represents error that occure when a property is not found.
+        /// </summary>
         public PropertyNotFoundException()
         {
         }
 
-        public PropertyNotFoundException(string propertyName,string message)
+        /// <summary>
+        /// Represents error that occure when a property is not found.
+        /// </summary>
+        /// <param name="propertyName">Name of the property which is not found.</param>
+        /// <param name="message">The message that describes the error.</param>
+        public PropertyNotFoundException(string propertyName, string message)
             : base(message)
         {
             this.PropertyName = propertyName;
         }
 
+        /// <summary>
+        /// Represents error that occure when a property is not found.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
+        /// <param name="innerException">The exception that is the cause of the current exception.</param>
         public PropertyNotFoundException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
+        /// <summary>
+        /// Represents error that occure when a property is not found.
+        /// </summary>
+        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">StreamingContext that contains contextual information about the source or destination.</param>
         protected PropertyNotFoundException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
 
+        /// <summary>
+        /// Name of the property which is not found.
+        /// </summary>
         public string PropertyName { get; private set; }
     }
 }

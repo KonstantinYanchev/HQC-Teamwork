@@ -1,5 +1,9 @@
 ﻿namespace EasyHttp.Http
 {
+
+    /// <summary>
+    /// Types of Http conteng encoding.
+    /// </summary>
     public static class HttpContentTransferEncoding
     {
         public const string Bit8 = "8bit";

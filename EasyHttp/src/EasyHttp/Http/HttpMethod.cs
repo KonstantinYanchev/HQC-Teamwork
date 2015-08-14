@@ -49,6 +49,9 @@
 
 namespace EasyHttp.Http
 {
+    /// <summary>
+    /// Http methods.
+    /// </summary>
     public enum HttpMethod
     {
         HEAD, 

@@ -49,6 +49,9 @@
 
 namespace EasyHttp.Http
 {
+    /// <summary>
+    /// Option for controling the cash.
+    /// </summary>
     public enum CacheControl
     {
         NoCache, 

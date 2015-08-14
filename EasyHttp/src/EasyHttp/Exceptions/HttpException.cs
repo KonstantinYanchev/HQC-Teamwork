@@ -59,6 +59,11 @@ namespace EasyHttp.Exceptions
     [Serializable]
     public class HttpException : Exception
     {
+        /// <summary>
+        /// Represents error that occure when Http error ocures.
+        /// </summary>
+        /// <param name="statusCode">Http status code</param>
+        /// <param name="statusDescription">Description of status code.</param>
         public HttpException(HttpStatusCode statusCode, string statusDescription)
             : base(string.Format("{0} {1}", statusCode, statusDescription))
         {
@@ -66,15 +71,26 @@ namespace EasyHttp.Exceptions
             this.StatusDescription = statusDescription;
         }
 
+        /// <summary>
+        ///  Represents error that occure when Http error ocures.
+        /// </summary>
         public HttpException()
         {
         }
 
+        /// <summary>
+        ///  Represents error that occure when Http error ocures.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
         public HttpException(string message)
             : base(message)
         {
         }
-
+        /// <summary>
+        ///  Represents error that occure when Http error ocures.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
+        /// <param name="innerException">The exception that is the cause of the current exception.</param>
         public HttpException(string message, Exception innerException)
             : base(message, innerException)
         {
@@ -90,8 +106,14 @@ namespace EasyHttp.Exceptions
         {
         }
 
+        /// <summary>
+        /// Http status code.
+        /// </summary>
         public HttpStatusCode StatusCode { get; private set; }
 
+        /// <summary>
+        /// Description of status code.
+        /// </summary>
         public string StatusDescription { get; private set; }
     }
 }
