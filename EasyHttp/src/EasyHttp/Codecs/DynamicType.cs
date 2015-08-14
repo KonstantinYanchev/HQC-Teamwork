@@ -53,6 +53,7 @@ namespace EasyHttp.Codecs
     using System.Dynamic;
     using System.Globalization;
 
+    using EasyHttp.Exceptions;
     using EasyHttp.Infrastructure;
 
     public class DynamicType : DynamicObject
@@ -66,7 +67,7 @@ namespace EasyHttp.Codecs
 
             if (!this._properties.TryGetValue(binderName, out value))
             {
-                throw new PropertyNotFoundException(binder.Name);
+                throw new PropertyNotFoundException(binder.Name, binder.Name);
             }
 
             result = value;

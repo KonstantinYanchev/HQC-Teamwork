@@ -1,0 +1,4 @@
+- Adding missing usings.
+- Extract interfaces in new namespace "contracts".
+- Extract new class PropertyValue from ObjectToUrl class.
+- Started adding XML Documentation.

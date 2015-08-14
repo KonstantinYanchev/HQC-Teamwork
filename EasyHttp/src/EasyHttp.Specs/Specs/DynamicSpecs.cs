@@ -54,6 +54,8 @@ namespace EasyHttp.Specs.Specs
     using Machine.Specifications;
 
     using EasyHttp.Codecs;
+
+    using EasyHttp.Exceptions;
     using EasyHttp.Infrastructure;
 
     [Subject("DynamicType")]

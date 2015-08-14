@@ -2,6 +2,9 @@
 {
     using System.Web;
 
+    /// <summary>
+    /// Class for getting URL segments from Object.
+    /// </summary>
     public class ObjectToUrlSegments : ObjectToUrl
     {
         protected override string PathStartCharacter

@@ -2,6 +2,9 @@
 {
     using System.Web;
 
+    /// <summary>
+    /// Class for getting URL parameters from Object.
+    /// </summary>
     public class ObjectToUrlParameters : ObjectToUrl
     {
         protected override string PathStartCharacter

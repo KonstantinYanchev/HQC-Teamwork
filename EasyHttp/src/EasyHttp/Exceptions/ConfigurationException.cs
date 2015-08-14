@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // Distributed under the BSD License
 // =================================
@@ -47,43 +47,31 @@
 // THE SOFTWARE.
 #endregion
 
-namespace EasyHttp.Infrastructure
+namespace EasyHttp.Exceptions
 {
     using System;
-    using System.Net;
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class HttpException : Exception
+    public class ConfigurationException : Exception
     {
-        public HttpException(HttpStatusCode statusCode, string statusDescription)
-            : base(string.Format("{0} {1}", statusCode, statusDescription))
-        {
-            this.StatusCode = statusCode;
-            this.StatusDescription = statusDescription;
-        }
-
-        public HttpException()
+        public ConfigurationException()
         {
         }
 
-        public HttpException(string message)
+        public ConfigurationException(string message)
             : base(message)
         {
         }
 
-        public HttpException(string message, Exception innerException)
+        public ConfigurationException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        protected HttpException(SerializationInfo info, StreamingContext context)
+        protected ConfigurationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
-
-        public HttpStatusCode StatusCode { get; private set; }
-
-        public string StatusDescription { get; private set; }
     }
 }

@@ -52,9 +52,9 @@ namespace EasyHttp.Http
     using System.Collections.Generic;
     using System.Security.Cryptography.X509Certificates;
 
-    using EasyHttp.Codecs;
     using EasyHttp.Contracts;
     using EasyHttp.Configuration;
+    using EasyHttp.Exceptions;
     using EasyHttp.Infrastructure;
 
     public class HttpClient
@@ -145,9 +145,9 @@ namespace EasyHttp.Http
         }
 
         public HttpResponse Post(
-            string uri, 
-            IDictionary<string, object> formData, 
-            IList<FileData> files, 
+            string uri,
+            IDictionary<string, object> formData,
+            IList<FileData> files,
             object query = null)
         {
             this.InitRequest(uri, HttpMethod.POST, query);

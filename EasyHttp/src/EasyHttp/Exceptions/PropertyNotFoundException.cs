@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Distributed under the BSD License
 // =================================
@@ -47,31 +47,34 @@
 // THE SOFTWARE.
 #endregion
 
-namespace EasyHttp.Infrastructure
+namespace EasyHttp.Exceptions
 {
     using System;
     using System.Runtime.Serialization;
 
     [Serializable]
-    public class ConfigurationException : Exception
+    public class PropertyNotFoundException : Exception
     {
-        public ConfigurationException()
+        public PropertyNotFoundException()
         {
         }
 
-        public ConfigurationException(string message)
+        public PropertyNotFoundException(string propertyName,string message)
             : base(message)
         {
+            this.PropertyName = propertyName;
         }
 
-        public ConfigurationException(string message, Exception innerException)
+        public PropertyNotFoundException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        protected ConfigurationException(SerializationInfo info, StreamingContext context)
+        protected PropertyNotFoundException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
+
+        public string PropertyName { get; private set; }
     }
 }
