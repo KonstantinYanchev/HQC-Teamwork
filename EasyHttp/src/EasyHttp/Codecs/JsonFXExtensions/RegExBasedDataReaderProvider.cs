@@ -9,7 +9,7 @@
     using JsonFx.Serialization.Providers;
 
     /// <summary>
-    /// Data reader provider that usings regular expressions.
+    /// Data reader provider that uses regular expressions.
     /// </summary>
     public class RegExBasedDataReaderProvider : IDataReaderProvider
     {
@@ -17,7 +17,7 @@
             new Dictionary<string, IDataReader>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
-        /// Data reader provider that usings regular expressions.
+        /// Data reader provider that uses regular expressions.
         /// </summary>
         /// <param name="dataReaders">Collection of DataReaders that will be added to the class by Mime Type.</param>
         public RegExBasedDataReaderProvider(IEnumerable<IDataReader> dataReaders)

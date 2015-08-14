@@ -60,11 +60,21 @@ namespace EasyHttp.Codecs
     {
         private readonly IDataWriterProvider _dataWriterProvider;
 
+        /// <summary>
+        /// Default Encoder
+        /// </summary>
+        /// <param name="dataWriterProvider">Object which provides lookup capabilities for finding matching IDataWriter.</param>
         public DefaultEncoder(IDataWriterProvider dataWriterProvider)
         {
             this._dataWriterProvider = dataWriterProvider;
         }
 
+        /// <summary>
+        /// Method for serialization for object.
+        /// </summary>
+        /// <param name="input">Object for serialization.</param>
+        /// <param name="contentType">Seralization content type</param>
+        /// <returns>A byte array containing the results of encoding the specified object.</returns>
         public byte[] Encode(object input, string contentType)
         {
             if (input.GetType() == typeof(string))

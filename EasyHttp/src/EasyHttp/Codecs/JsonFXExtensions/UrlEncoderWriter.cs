@@ -60,12 +60,20 @@ namespace EasyHttp.Codecs.JsonFXExtensions
     {
         private readonly string[] _contentTypes;
 
+        /// <summary>
+        /// Writer for encoded URL.
+        /// </summary>
+        /// <param name="settings">Controls the serialization settings.</param>
+        /// <param name="contentTypes">Collection of mime types.</param>
         public UrlEncoderWriter(DataWriterSettings settings, params string[] contentTypes)
             : base(settings)
         {
             this._contentTypes = contentTypes;
         }
 
+        /// <summary>
+        /// Collection of mime types as strings.
+        /// </summary>
         public override IEnumerable<string> ContentType
         {
             get
@@ -84,6 +92,9 @@ namespace EasyHttp.Codecs.JsonFXExtensions
             }
         }
 
+        /// <summary>
+        /// Collection of file extentions as string.
+        /// </summary>
         public override IEnumerable<string> FileExtension
         {
             get

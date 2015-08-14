@@ -53,6 +53,9 @@ namespace EasyHttp.Exceptions
     using System.Net;
     using System.Runtime.Serialization;
 
+    /// <summary>
+    /// Represents error that occure when Http error ocures.
+    /// </summary>
     [Serializable]
     public class HttpException : Exception
     {
@@ -77,6 +80,11 @@ namespace EasyHttp.Exceptions
         {
         }
 
+        /// <summary>
+        ///  Represents error that occure when Http error ocures.
+        /// </summary>
+        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">StreamingContext that contains contextual information about the source or destination.</param>
         protected HttpException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

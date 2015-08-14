@@ -60,6 +60,11 @@ namespace EasyHttp.Codecs.JsonFXExtensions
 
     public class UrlEncoderTextFormatter : ITextFormatter<ModelTokenType>
     {
+        /// <summary>
+        /// Method for encoding URL from given collection of tokens.
+        /// </summary>
+        /// <param name="tokens">Collection of tokens which should be encoded to URL.</param>
+        /// <param name="writer">Text writer for encoded URL.</param>
         public void Format(IEnumerable<Token<ModelTokenType>> tokens, TextWriter writer)
         {
             var firstProperty = true;
@@ -105,6 +110,10 @@ namespace EasyHttp.Codecs.JsonFXExtensions
             }
         }
 
+        /// <summary>
+        /// Method for encoding URL from given collection of tokens.
+        /// </summary>
+        /// <param name="tokens">Collection of tokens which should be encoded to URL.</param>
         public string Format(IEnumerable<Token<ModelTokenType>> tokens)
         {
             using (var writer = new StringWriter(CultureInfo.InvariantCulture))

@@ -58,6 +58,11 @@ namespace EasyHttp.Codecs.JsonFXExtensions
 
     public class RemoveAmpersandFromNameJsonResolverStrategy : JsonResolverStrategy
     {
+        /// <summary>
+        /// Removes ampersand from given name.
+        /// </summary>
+        /// <param name="member">Object for checking.</param>
+        /// <returns>Collection with a single DataName element which does not start with an ampersand.</returns>
         public override IEnumerable<DataName> GetName(MemberInfo member)
         {
             if (!member.Name.StartsWith("@", StringComparison.InvariantCulture))

@@ -60,6 +60,12 @@ namespace EasyHttp.Codecs
     {
         private readonly Dictionary<string, object> _properties = new Dictionary<string, object>();
 
+        /// <summary>
+        /// Provides the implementation for operations that get member values.
+        /// </summary>
+        /// <param name="binder">Provides information about the object that called the dynamic operation</param>
+        /// <param name="result">The result of the get operation.</param>
+        /// <returns>true if the operation is successful; otherwise, false.</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             var binderName = binder.Name.ToLower(CultureInfo.InvariantCulture);
@@ -74,6 +80,12 @@ namespace EasyHttp.Codecs
             return true;
         }
 
+        /// <summary>
+        /// Provides the implementation for operations that set member values. 
+        /// </summary>
+        /// <param name="binder">Provides information about the object that called the dynamic operation</param>
+        /// <param name="value"> The value to set to the member.</param>
+        /// <returns>true if the operation is successful; otherwise, false. </returns>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             this._properties[binder.Name.ToLower(CultureInfo.InvariantCulture)] = value;

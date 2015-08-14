@@ -59,6 +59,10 @@ namespace EasyHttp.Codecs.JsonFXExtensions
     using JsonFx.Serialization.Providers;
 
     // TODO: This is a copy of the DataWriterProvider in JsonFX. Need to clean it up and move things elsewhere
+
+    /// <summary>
+    ///  Data writer provider that uses regular expressions.
+    /// </summary>
     public class RegExBasedDataWriterProvider : IDataWriterProvider
     {
         private readonly IDataWriter _defaultWriter;
@@ -69,6 +73,10 @@ namespace EasyHttp.Codecs.JsonFXExtensions
         private readonly IDictionary<string, IDataWriter> _writersByMime =
             new Dictionary<string, IDataWriter>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// Data writer provider which uses Regullar Expressions.
+        /// </summary>
+        /// <param name="writers">Collection of DataWriters that will be added to the class by Mime Type or by File Extention.</param>
         public RegExBasedDataWriterProvider(IEnumerable<IDataWriter> writers)
         {
             if (writers != null)
@@ -107,6 +115,9 @@ namespace EasyHttp.Codecs.JsonFXExtensions
             }
         }
 
+        /// <summary>
+        ///  Dafault Data Writer.
+        /// </summary>
         public IDataWriter DefaultDataWriter
         {
             get
@@ -115,6 +126,11 @@ namespace EasyHttp.Codecs.JsonFXExtensions
             }
         }
 
+        /// <summary>
+        /// Get a data reader by file extention.
+        /// </summary>
+        /// <param name="extension">File extention by which to get the data provider</param>
+        /// <returns>Data Writer that corresponds to the required file extention, if such exist. Otherwise returns null</returns>
         public IDataWriter Find(string extension)
         {
             extension = NormalizeExtension(extension);
@@ -127,7 +143,12 @@ namespace EasyHttp.Codecs.JsonFXExtensions
 
             return null;
         }
-
+        /// <summary>
+        /// Get a data reader by content type.
+        /// </summary>
+        /// <param name="acceptHeader">String containing all acceptable content types.</param>
+        /// <param name="contentTypeHeader">String from which to get the content type.</param>
+        /// <returns>DataWriter that corresponds to the required content type if such exist. Otherwise returns null.</returns>
         public IDataWriter Find(string acceptHeader, string contentTypeHeader)
         {
             foreach (var type in ParseHeaders(acceptHeader, contentTypeHeader))
@@ -145,6 +166,12 @@ namespace EasyHttp.Codecs.JsonFXExtensions
             return null;
         }
 
+        /// <summary>
+        /// Parse strings to get mime types out of them.
+        /// </summary>
+        /// <param name="accept">String containing all acceptable content types.</param>
+        /// <param name="contentType">String from which to get the content type.</param>
+        /// <returns>Collection of mime types.</returns>
         public static IEnumerable<string> ParseHeaders(string accept, string contentType)
         {
             string mime;

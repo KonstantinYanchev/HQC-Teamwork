@@ -52,23 +52,43 @@ namespace EasyHttp.Exceptions
     using System;
     using System.Runtime.Serialization;
 
+    /// <summary>
+    /// Represents error that occure during congiguration. 
+    /// </summary>
     [Serializable]
     public class ConfigurationException : Exception
     {
+        /// <summary>
+        ///  Represents error that occure during congiguration.
+        /// </summary>
         public ConfigurationException()
         {
         }
 
+        /// <summary>
+        ///  Represents error that occure during congiguration.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
         public ConfigurationException(string message)
             : base(message)
         {
         }
 
+        /// <summary>
+        ///  Represents error that occure during congiguration.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
+        /// <param name="innerException">The exception that is the cause of the current exception.</param>
         public ConfigurationException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
+        /// <summary>
+        ///  Represents error that occure during congiguration.
+        /// </summary>
+        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">StreamingContext that contains contextual information about the source or destination.</param>
         protected ConfigurationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

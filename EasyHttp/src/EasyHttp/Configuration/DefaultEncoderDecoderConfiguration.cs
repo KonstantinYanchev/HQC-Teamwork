@@ -65,6 +65,11 @@ namespace EasyHttp.Configuration
 
     public class DefaultEncoderDecoderConfiguration : IEncoderDecoderConfiguration
     {
+
+        /// <summary>
+        /// Method which configurates default encoder.
+        /// </summary>
+        /// <returns>Default configurated encoder.</returns>
         public IEncoder GetEncoder()
         {
             var jsonWriter = new JsonWriter(
@@ -85,6 +90,10 @@ namespace EasyHttp.Configuration
             return new DefaultEncoder(dataWriterProvider);
         }
 
+        /// <summary>
+        /// Method which configurates default decoder.
+        /// </summary>
+        /// <returns>Default configurated decoder.</returns>
         public IDecoder GetDecoder()
         {
             var jsonReader = new JsonReader(
@@ -101,6 +110,10 @@ namespace EasyHttp.Configuration
             return new DefaultDecoder(dataReaderProvider);
         }
 
+        /// <summary>
+        /// Method for combining strategies.
+        /// </summary>
+        /// <returns>Ready combined strategy</returns>
         public static CombinedResolverStrategy CombinedResolverStrategy()
         {
             return new CombinedResolverStrategy(
