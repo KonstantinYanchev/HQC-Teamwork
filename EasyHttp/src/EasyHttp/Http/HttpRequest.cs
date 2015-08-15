@@ -43,6 +43,10 @@ namespace EasyHttp.Http
     using EasyHttp.Infrastructure;
 
     // TODO: This class needs cleaning up and abstracting the encoder one more level
+
+    /// <summary>
+    /// Http request.
+    /// </summary>
     public class HttpRequest
     {
         private readonly IEncoder _encoder;
@@ -57,6 +61,10 @@ namespace EasyHttp.Http
 
         private HttpWebRequest httpWebRequest;
 
+        /// <summary>
+        /// Http request.
+        /// </summary>
+        /// <param name="encoder">Encoder for encoding  the request.</param>
         public HttpRequest(IEncoder encoder)
         {
             this.RawHeaders = new Dictionary<string, object>();
@@ -64,13 +72,13 @@ namespace EasyHttp.Http
             this.ClientCertificates = new X509CertificateCollection();
 
             this.UserAgent = string.Format(
-                "EasyHttp HttpClient v{0}", 
+                "EasyHttp HttpClient v{0}",
                 Assembly.GetAssembly(typeof(HttpClient)).GetName().Version);
 
             this.Accept = string.Join(
-                ";", 
-                HttpContentTypes.TextHtml, 
-                HttpContentTypes.ApplicationXml, 
+                ";",
+                HttpContentTypes.TextHtml,
+                HttpContentTypes.ApplicationXml,
                 HttpContentTypes.ApplicationJson);
             this._encoder = encoder;
 
@@ -79,78 +87,182 @@ namespace EasyHttp.Http
             this.AllowAutoRedirect = true;
         }
 
+        /// <summary>
+        /// Mime types that will be accepted as response.
+        /// </summary>
         public string Accept { get; set; }
 
         public string AcceptCharSet { get; set; }
 
+        /// <summary>
+        /// Type of encoding that will be accept.
+        /// </summary>
         public string AcceptEncoding { get; set; }
 
+        /// <summary>
+        /// Expected response language.
+        /// </summary>
         public string AcceptLanguage { get; set; }
 
+        /// <summary>
+        /// Should the connection be close after the response is received.
+        /// </summary>
         public bool KeepAlive { get; set; }
 
+        /// <summary>
+        /// Collection of client certificates.
+        /// </summary>
         public X509CertificateCollection ClientCertificates { get; set; }
 
+        /// <summary>
+        /// Content length.
+        /// </summary>
         public string ContentLength { get; private set; }
 
+        /// <summary>
+        /// Content type.
+        /// </summary>
         public string ContentType { get; set; }
 
+        /// <summary>
+        /// Content encoding.
+        /// </summary>
         public string ContentEncoding { get; set; }
 
+        /// <summary>
+        /// Collection of cookies.
+        /// </summary>
         public CookieCollection Cookies { get; set; }
 
+        /// <summary>
+        /// Date of sending request.
+        /// </summary>
         public DateTime Date { get; set; }
 
         public bool Expect { get; set; }
 
+        /// <summary>
+        /// Request sender.
+        /// </summary>
         public string From { get; set; }
 
+        /// <summary>
+        /// Request host.
+        /// </summary>
         public string Host { get; set; }
 
+        /// <summary>
+        /// If none of the entity tags match, or if "*" is given and no current entity exists, 
+        /// the server MUST NOT perform the requested method, 
+        /// and MUST return a 412 (Precondition Failed) response.
+        /// </summary>
         public string IfMatch { get; set; }
 
+        /// <summary>
+        /// If the requested variant has not been modified since the time specified in this field,
+        /// an entity will not be returned from the server; instead, a 304 (not modified) 
+        /// response will be returned without any message-body.
+        /// </summary>
         public DateTime IfModifiedSince { get; set; }
 
+        /// <summary>
+        /// If the entity is unchanged, send the part(s) that are missing; otherwise, send the entire new entity.
+        /// </summary>
         public string IfRange { get; set; }
 
+        /// <summary>
+        /// The Max-Forwards value is a decimal integer indicating 
+        /// the remaining number of times this request message may be forwarded.
+        /// </summary>
         public int MaxForwards { get; set; }
 
+        /// <summary>
+        /// Allows the client to specify, for the server's benefit,
+        /// the address (URI) of the resource from which the Request-URI was obtained
+        /// </summary>
         public string Referer { get; set; }
 
+        /// <summary>
+        /// Request range.
+        /// </summary>
         public int Range { get; set; }
 
+        /// <summary>
+        ///  Contains information about the user agent originating the request.
+        /// </summary>
         public string UserAgent { get; set; }
 
+        /// <summary>
+        /// Request headers in raw format.
+        /// </summary>
         public IDictionary<string, object> RawHeaders { get; private set; }
 
+        /// <summary>
+        /// Http Method.
+        /// </summary>
         public HttpMethod Method { get; set; }
 
+        /// <summary>
+        /// Request data.
+        /// </summary>
         public object Data { get; set; }
 
+        /// <summary>
+        /// Address to which the request is sent. 
+        /// </summary>
         public string Uri { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string PutFilename { get; set; }
 
+        /// <summary>
+        /// Data from MyltiPart form that will be send. 
+        /// </summary>
         public IDictionary<string, object> MultiPartFormData { get; set; }
 
+        /// <summary>
+        /// File data from MultiPart form.
+        /// </summary>
         public IList<FileData> MultiPartFileData { get; set; }
 
+        /// <summary>
+        /// Time to wait for response before the request is canceled.
+        /// </summary>
         public int Timeout { get; set; }
 
+        /// <summary>
+        /// Are query string parameters represented as segments in the URI.
+        /// </summary>
         public bool ParametersAsSegments { get; set; }
 
         public bool ForceBasicAuth { get; set; }
 
+        /// <summary>
+        /// Should cookies are persisted.
+        /// </summary>
         public bool PersistCookies { get; set; }
 
+        /// <summary>
+        /// Should auto redirect be allowed.
+        /// </summary>
         public bool AllowAutoRedirect { get; set; }
 
+        /// <summary>
+        /// Method for setting basic authentication. 
+        /// </summary>
+        /// <param name="username">Authentication username.</param>
+        /// <param name="password">Authentication password.</param>
         public void SetBasicAuthentication(string username, string password)
         {
             this._username = username;
             this._password = password;
         }
 
+        /// <summary>
+        /// Method for setup the request headers. 
+        /// </summary>
         private void SetupHeader()
         {
             if (!this.PersistCookies || this.cookieContainer == null)
@@ -222,15 +334,21 @@ namespace EasyHttp.Http
             }
         }
 
+
         private bool AcceptAllCertifications(
-            object sender, 
-            X509Certificate certificate, 
-            X509Chain chain, 
+            object sender,
+            X509Certificate certificate,
+            X509Chain chain,
             SslPolicyErrors sslpolicyerrors)
         {
             return true;
         }
 
+        /// <summary>
+        /// Method for adding additional headers.
+        /// </summary>
+        /// <param name="header">Name of the header that will be added.</param>
+        /// <param name="value">Value of the header that will be added.</param>
         public void AddExtraHeader(string header, object value)
         {
             if (value != null && !this.RawHeaders.ContainsKey(header))
@@ -239,27 +357,28 @@ namespace EasyHttp.Http
             }
         }
 
+        /// <summary>
+        /// Method for setting up of the request body. 
+        /// </summary>
         private void SetupBody()
         {
             if (this.Data != null)
             {
                 this.SetupData();
-
-                return;
             }
-
-            if (!string.IsNullOrEmpty(this.PutFilename))
+            else if (!string.IsNullOrEmpty(this.PutFilename))
             {
                 this.SetupPutFilename();
-                return;
             }
-
-            if (this.MultiPartFormData != null || this.MultiPartFileData != null)
+            else if (this.MultiPartFormData != null || this.MultiPartFileData != null)
             {
                 this.SetupMultiPartBody();
             }
         }
 
+        /// <summary>
+        /// Method for setting up the request data.
+        /// </summary>
         private void SetupData()
         {
             var bytes = this._encoder.Encode(this.Data, this.ContentType);
@@ -276,6 +395,9 @@ namespace EasyHttp.Http
             requestStream.Close();
         }
 
+        /// <summary>
+        /// Method for seeting up PutFileName.
+        /// </summary>
         private void SetupPutFilename()
         {
             using (var fileStream = new FileStream(this.PutFilename, FileMode.Open))
@@ -297,6 +419,9 @@ namespace EasyHttp.Http
             }
         }
 
+        /// <summary>
+        /// Method for setting up multipart form body.
+        /// </summary>
         private void SetupMultiPartBody()
         {
             var multiPartStreamer = new MultiPartStreamer(this.MultiPartFormData, this.MultiPartFileData);
@@ -312,6 +437,10 @@ namespace EasyHttp.Http
             multiPartStreamer.StreamMultiPart(this.httpWebRequest.GetRequestStream());
         }
 
+        /// <summary>
+        /// Method for preparing request for sending.
+        /// </summary>
+        /// <returns>Http request ready to be sent.</returns>
         public HttpWebRequest PrepareRequest()
         {
             this.httpWebRequest = (HttpWebRequest)WebRequest.Create(this.Uri);
@@ -323,6 +452,9 @@ namespace EasyHttp.Http
             return this.httpWebRequest;
         }
 
+        /// <summary>
+        /// Method for seeting up client certificates.
+        /// </summary>
         private void SetupClientCertificates()
         {
             if (this.ClientCertificates == null || this.ClientCertificates.Count == 0)
@@ -333,6 +465,9 @@ namespace EasyHttp.Http
             this.httpWebRequest.ClientCertificates.AddRange(this.ClientCertificates);
         }
 
+        /// <summary>
+        /// Method for setting up authentication.
+        /// </summary>
         private void SetupAuthentication()
         {
             this.SetupClientCertificates();
@@ -350,11 +485,18 @@ namespace EasyHttp.Http
             }
         }
 
+        /// <summary>
+        /// Method for setting  the cache control to no-cache.
+        /// </summary>
         public void SetCacheControlToNoCache()
         {
             this._cachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
         }
 
+        /// <summary>
+        /// Method for setting the cache control with max age.
+        /// </summary>
+        /// <param name="maxAge">Maximum age for keeping the cache.</param>
         public void SetCacheControlWithMaxAge(TimeSpan maxAge)
         {
             this._cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAge, maxAge);
