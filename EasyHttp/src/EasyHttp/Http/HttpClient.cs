@@ -73,7 +73,7 @@ namespace EasyHttp.Http
         /// Client for sending Http request and Http responses.
         /// </summary>
         public HttpClient()
-            : this(new DefaultEncoderDecoderConfiguration())
+            : this(new DefaultEncoderDecoderConfiguration(), new UriComposer())
         {
         }
 
@@ -81,11 +81,12 @@ namespace EasyHttp.Http
         /// Client for sending Http request and Http responses.
         /// </summary>
         /// <param name="encoderDecoderConfiguration">Configuration for getting encoder and decoder.</param>
-        public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration)
+        /// <param name="composer">Composer for generating URI.</param>
+        public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, UriComposer composer)
         {
             this._encoder = encoderDecoderConfiguration.GetEncoder();
             this._decoder = encoderDecoderConfiguration.GetDecoder();
-            this._uriComposer = new UriComposer();
+            this._uriComposer = composer;
 
             this.Request = new HttpRequest(this._encoder);
         }
@@ -95,7 +96,7 @@ namespace EasyHttp.Http
         /// </summary>
         /// <param name="baseUri">URI to which  the Http requests will be directed.</param>
         public HttpClient(string baseUri)
-            : this(new DefaultEncoderDecoderConfiguration())
+            : this(new DefaultEncoderDecoderConfiguration(), new UriComposer())
         {
             this._baseUri = baseUri;
         }

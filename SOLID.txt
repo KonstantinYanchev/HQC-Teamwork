@@ -1,0 +1,82 @@
+S- Single responsibility.
+The single responsibility principle states that every class should have responsibility over a single part of the functionality provided by the software.
+
+/FIRST EXAMPLE
+  - public class DefaultDecoder : IDecoder
+The DefaultDecoder is concerned only with decoding data.
+
+/SECOND EXAMPLE
+  - public class DefaultEncoder : IEncoder
+The DefaultEncoder is concerned only with encoding data.
+
+SUMMARY: That way we dont have classes which mix different functionality in this case decoding and encoding together.This way we follow SRP which is described above.
+
+
+
+O- Open close principe.
+Open/closed principle states "software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification"; that is, such an entity can allow its behaviour to be extended without modifying its source code.
+
+/FIRST EXAMPLE
+   - public class HttpRequest
+Can be inherited and in that way its funcionality can be extended.
+Its private methods(SetupData,SetupBody,SetupAuthentication, etc.) ensure that third parties can not modify its funcionality.
+This way we follow OCP which is described above.
+
+/SECOND EXAMPLE
+   -  public class MultiPartStreamer
+Can be inherited and in that way its funcionality can be extended.
+Its private methods(CreateFormBoundaryHeader,CreateFileBoundaryHeader) ensure that third parties can not modify its funcionality.
+This way we follow OCP which is described above.
+
+L- Liskov substitution.
+
+
+
+I- Interface segregation principle.
+
+ ISP splits interfaces which are very large into smaller and more specific ones so that clients will only have to know about the methods that are of interest to them.
+
+/FIRST EXAMPLE
+------------------------------------------------------------------
+namespace EasyHttp.Contracts
+{
+    public interface IEncoder
+    {
+        byte[] Encode(object input, string contentType);
+    }
+}
+------------------------------------------------------------------
+The interface  IEncoder  has method Encode which return array of bytes. In that way the interface follows the ISP, which is explaned above.
+
+/SECOND EXAMPLE
+------------------------------------------------------------------
+ public interface IDecoder
+    {
+        T DecodeToStatic<T>(string input, string contentType);
+
+        dynamic DecodeToDynamic(string input, string contentType);
+    }
+------------------------------------------------------------------
+The interface IDecoder describes methods only related to decoding.In that way the interface follows the ISP, which is explaned above.
+
+SUMMARY:By having IEncoder and IDecoder as two separate interfaces we ensure that another user want have to creater decoder class that has method for encoding.
+
+
+
+D- Dependency inversion.
+When following this principle, the conventional dependency relationships established from high-level, policy-setting modules to low-level, dependency modules are inverted (i.e. reversed), thus rendering high-level modules independent of the low-level module implementation details
+
+/FIRST EXAMPLE
+------------------------------------------------------------------
+   - public class HttpClient
+the constructor: 
+  public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, IUriComposer composer)
+All modules that this class need are passed trough the constructor.This way the class is not dependant on concrete implementations of the interfaces.
+
+/SECOND EXAMPLE
+------------------------------------------------------------------
+  - public class HttpRequest
+the constructor: 
+  public HttpRequest(IEncoder encoder)
+The class is not dependant on concrete implementations of IEncoder.
+That way we follow the DIP.

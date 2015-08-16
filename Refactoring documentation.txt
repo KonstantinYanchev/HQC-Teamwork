@@ -1,4 +1,33 @@
 - Adding missing usings.
+
 - Extract interfaces in new namespace "contracts".
+
 - Extract new class PropertyValue from ObjectToUrl class.
-- Started adding XML Documentation.
+
+- Adding XML Documentation.
+
+- Implemented Dependency inversion principle in HTTP Client.
+BEFORE
+-------------------------------------------------------------------------------------------------
+ public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration)
+        {
+            this._encoder = encoderDecoderConfiguration.GetEncoder();
+            this._decoder = encoderDecoderConfiguration.GetDecoder();
+            this._uriComposer = new UriComposer();
+
+            this.Request = new HttpRequest(this._encoder);
+        }
+-------------------------------------------------------------------------------------------------
+
+AFTER
+-------------------------------------------------------------------------------------------------
+public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, IUriComposer composer)
+        {
+            this._encoder = encoderDecoderConfiguration.GetEncoder();
+            this._decoder = encoderDecoderConfiguration.GetDecoder();
+            this._uriComposer = composer;
+
+            this.Request = new HttpRequest(this._encoder);
+        }
+-------------------------------------------------------------------------------------------------
+We add new parameter in constructor and that way tha class becomes independent from the UriComposer class. 
