@@ -57,60 +57,149 @@ namespace EasyHttp.Http
     using EasyHttp.Codecs;
     using EasyHttp.Contracts;
 
+    /// <summary>
+    /// Http response.
+    /// </summary>
     public class HttpResponse
     {
         private readonly IDecoder _decoder;
 
         private HttpWebResponse _response;
 
+        /// <summary>
+        /// Http response.
+        /// </summary>
+        /// <param name="decoder">Decoder for http response.</param>
         public HttpResponse(IDecoder decoder)
         {
             this._decoder = decoder;
         }
-
+        /// <summary>
+        /// Response character set.
+        /// </summary>
         public string CharacterSet { get; private set; }
 
+        /// <summary>
+        /// indicates the media type of the entity-body sent to the recipient
+        /// </summary>
         public string ContentType { get; private set; }
 
+        /// <summary>
+        /// Http response status code.
+        /// </summary>
         public HttpStatusCode StatusCode { get; private set; }
 
+        /// <summary>
+        /// Http response status description of code.
+        /// </summary>
         public string StatusDescription { get; private set; }
 
+        /// <summary>
+        /// Collection of cookies.
+        /// </summary>
         public CookieCollection Cookies { get; private set; }
 
+        /// <summary>
+        /// Conveys the sender's estimate of the amount of time 
+        /// since the response was generated at the origin server.
+        /// </summary>
         public int Age { get; private set; }
 
+        /// <summary>
+        /// Inform the recipient of valid methods
+        /// associated with the resource.
+        /// </summary>
         public HttpMethod[] Allow { get; private set; }
 
+        /// <summary>
+        /// Specify directives that MUST be obeyed by all caching mechanisms along the request/response chain.
+        /// </summary>
         public CacheControl CacheControl { get; private set; }
 
+        /// <summary>
+        /// Indicates what additional content codings have been applied to the entity-body.
+        /// </summary>
         public string ContentEncoding { get; private set; }
 
+        /// <summary>
+        /// Describes the natural language(s) of the intended audience for the enclosed entity.
+        /// </summary>
         public string ContentLanguage { get; private set; }
 
+        /// <summary>
+        ///  The size of the entity-body, in decimal number of OCTETs, sent to the recipient.
+        /// </summary>
         public long ContentLength { get; private set; }
 
+        /// <summary>
+        /// Used to supply the resource location for the entity enclosed in the message 
+        /// when that entity is accessible from a location separate from the requested resource's URI.
+        /// </summary>
         public string ContentLocation { get; private set; }
 
         // TODO :This should be files
+
+        /// <summary>
+        /// Http content description.
+        /// </summary>
         public string ContentDisposition { get; private set; }
 
+        /// <summary>
+        /// Represents the date and time at which the message was originated
+        /// </summary>
         public DateTime Date { get; private set; }
 
+        /// <summary>
+        /// provides the current value of the entity tag for the requested variant. 
+        /// </summary>
+        /// <example>ETag: "xyzzy"; ETag: W/"xyzzy"</example>
         public string ETag { get; private set; }
 
+        /// <summary>
+        /// Gives the date/time after which the response is considered stale.
+        /// </summary>
+        /// <example>Expires: Thu, 01 Dec 1994 16:00:00 GMT</example>
         public DateTime Expires { get; private set; }
 
+        /// <summary>
+        /// Indicates the date and time at which the origin server believes the variant was last modified.
+        /// </summary>
+        /// <example>Last-Modified: Tue, 15 Nov 1994 12:45:26 GMT</example>
         public DateTime LastModified { get; private set; }
 
+        /// <summary>
+        /// Used to redirect the recipient to a location other than the
+        /// Request-URI for completion of the request or identification of a new resource.
+        /// </summary>
+        /// <example>Location: http://www.w3.org/pub/WWW/People.html </example>
         public string Location { get; private set; }
 
+        /// <summary>
+        /// Used to include implementation- specific directives that
+        /// might apply to any recipient along the request/response chain.
+        /// </summary>
+        /// <example> 
+        /// pragma-directive  = "no-cache" | extension-pragma
+        /// extension-pragma  = token [ "=" ( token | quoted-string ) ]
+        /// </example>
         public CacheControl Pragma { get; private set; }
 
+        /// <summary>
+        /// Contains information about the software used by the origin server to handle the request. 
+        /// </summary>
+        /// <example>
+        /// Server: CERN/3.0 libwww/2.17
+        /// </example>
         public string Server { get; private set; }
 
+        /// <summary>
+        /// Response headers in raw format.
+        /// </summary>
         public WebHeaderCollection RawHeaders { get; private set; }
 
+        /// <summary>
+        /// Response stream.
+        /// </summary>
         public Stream ResponseStream
         {
             get
@@ -119,6 +208,9 @@ namespace EasyHttp.Http
             }
         }
 
+        /// <summary>
+        /// Response body decoded as dynamic object.
+        /// </summary>
         public dynamic DynamicBody
         {
             get
@@ -127,8 +219,17 @@ namespace EasyHttp.Http
             }
         }
 
+        /// <summary>
+        /// Text in raw format
+        /// </summary>
         public string RawText { get; private set; }
 
+        /// <summary>
+        /// Response body decoded as object.
+        /// </summary>
+        /// <typeparam name="T">Type of object to decodes as.</typeparam>
+        /// <param name="overrideContentType">Override the type of object to decode as.</param>
+        /// <returns>The decoded object.</returns>
         public T StaticBody<T>(string overrideContentType = null)
         {
             if (overrideContentType != null)
@@ -139,6 +240,12 @@ namespace EasyHttp.Http
             return this._decoder.DecodeToStatic<T>(this.RawText, this.ContentType);
         }
 
+        /// <summary>
+        /// Method for getting a http response
+        /// </summary>
+        /// <param name="request">Http request to be sent</param>
+        /// <param name="filename">Name of the file to get</param>
+        /// <param name="streamResponse">Is the response a stream</param>
         public void GetResponse(WebRequest request, string filename, bool streamResponse)
         {
             try
@@ -195,6 +302,9 @@ namespace EasyHttp.Http
             }
         }
 
+        /// <summary>
+        /// Method for setting up the response headers
+        /// </summary>
         private void GetHeaders()
         {
             this.CharacterSet = this._response.CharacterSet;
@@ -229,12 +339,17 @@ namespace EasyHttp.Http
             }
 
             // TODO: Finish this.
-            // public HttpMethod Allow { get; private set; }
-            // public CacheControl CacheControl { get; private set; }
-            // public CacheControl Pragma { get; private set; }
+            // this.Allow = ...
+            // this.CacheControl = ...
+            // this.Pragma = ...
             this.RawHeaders = this._response.Headers;
         }
 
+        /// <summary>
+        /// Method for getting a response header
+        /// </summary>
+        /// <param name="header">Name of the header to get</param>
+        /// <returns>The value of the header</returns>
         private string GetHeader(string header)
         {
             var headerValue = this._response.GetResponseHeader(header);
