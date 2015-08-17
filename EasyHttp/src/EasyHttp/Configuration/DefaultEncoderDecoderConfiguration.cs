@@ -58,7 +58,7 @@ namespace EasyHttp.Configuration
     using JsonFx.Serialization.Resolvers;
     using JsonFx.Xml;
     using JsonFx.Xml.Resolvers;
-
+    
     using EasyHttp.Codecs;
     using EasyHttp.Codecs.JsonFXExtensions;
     using EasyHttp.Contracts;
