@@ -72,6 +72,7 @@
     <Compile Include="Http\HttpResponse.cs" />
     <Compile Include="Http\MultipartStreamer.cs" />
     <Compile Include="Exceptions\ConfigurationException.cs" />
+    <Compile Include="Contracts\IUriComposer.cs" />
     <Compile Include="Infrastructure\ObjectToUrl.cs" />
     <Compile Include="Infrastructure\ObjectToUrlSegments.cs" />
     <Compile Include="Infrastructure\ObjectToUrlParameters.cs" />

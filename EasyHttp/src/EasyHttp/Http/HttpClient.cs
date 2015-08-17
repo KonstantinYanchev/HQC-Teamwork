@@ -67,7 +67,7 @@ namespace EasyHttp.Http
 
         private readonly IEncoder _encoder;
 
-        private readonly UriComposer _uriComposer;
+        private readonly IUriComposer _uriComposer;
 
         /// <summary>
         /// Client for sending Http request and Http responses.
@@ -82,7 +82,7 @@ namespace EasyHttp.Http
         /// </summary>
         /// <param name="encoderDecoderConfiguration">Configuration for getting encoder and decoder.</param>
         /// <param name="composer">Composer for generating URI.</param>
-        public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, UriComposer composer)
+        public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, IUriComposer composer)
         {
             this._encoder = encoderDecoderConfiguration.GetEncoder();
             this._decoder = encoderDecoderConfiguration.GetDecoder();

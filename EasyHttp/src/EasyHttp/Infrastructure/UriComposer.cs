@@ -1,11 +1,12 @@
 namespace EasyHttp.Infrastructure
 {
     using System;
+    using Contracts;
 
     /// <summary>
     /// Class used to compose URIs.
     /// </summary>
-    public class UriComposer
+    public class UriComposer : IUriComposer
     {
         private readonly ObjectToUrlParameters _objectToUrlParameters;
 

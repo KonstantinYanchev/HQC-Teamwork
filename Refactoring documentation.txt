@@ -30,4 +30,6 @@ public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, IUri
             this.Request = new HttpRequest(this._encoder);
         }
 -------------------------------------------------------------------------------------------------
-We add new parameter in constructor and that way tha class becomes independent from the UriComposer class. 
+We add new parameter in constructor and that way the class becomes independent from the UriComposer class. 
+
+- Extracted IUriComposer from URI composer. That way we follow the LSP.
