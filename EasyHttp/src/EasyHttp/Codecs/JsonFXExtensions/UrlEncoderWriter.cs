@@ -51,10 +51,10 @@ namespace EasyHttp.Codecs.JsonFXExtensions
 {
     using System.Collections.Generic;
 
+    using EasyHttp.Http;
+
     using JsonFx.Model;
     using JsonFx.Serialization;
-
-    using EasyHttp.Http;
 
     public class UrlEncoderWriter : ModelWriter
     {

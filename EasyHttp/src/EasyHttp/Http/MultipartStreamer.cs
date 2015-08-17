@@ -69,27 +69,6 @@
             stream.WriteString("--");
         }
 
-        private static void StreamFileContents(Stream file, FileData fileData, Stream requestStream)
-        {
-            var buffer = new byte[8192];
-
-            int count;
-
-            while ((count = file.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                if (fileData.ContentTransferEncoding == HttpContentTransferEncoding.Base64)
-                {
-                    string str = Convert.ToBase64String(buffer, 0, count);
-
-                    requestStream.WriteString(str);
-                }
-                else if (fileData.ContentTransferEncoding == HttpContentTransferEncoding.Binary)
-                {
-                    requestStream.Write(buffer, 0, count);
-                }
-            }
-        }
-
         /// <summary>
         /// Method for getting the content type.
         /// </summary>
@@ -131,6 +110,27 @@
             contentLength += ascii.GetBytes("--").Length; // ending -- to the boundary
 
             return contentLength;
+        }
+
+        private static void StreamFileContents(Stream file, FileData fileData, Stream requestStream)
+        {
+            var buffer = new byte[8192];
+
+            int count;
+
+            while ((count = file.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                if (fileData.ContentTransferEncoding == HttpContentTransferEncoding.Base64)
+                {
+                    string str = Convert.ToBase64String(buffer, 0, count);
+
+                    requestStream.WriteString(str);
+                }
+                else if (fileData.ContentTransferEncoding == HttpContentTransferEncoding.Binary)
+                {
+                    requestStream.Write(buffer, 0, count);
+                }
+            }
         }
 
         /// <summary>

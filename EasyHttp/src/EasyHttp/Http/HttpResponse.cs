@@ -74,6 +74,7 @@ namespace EasyHttp.Http
         {
             this.decoder = decoder;
         }
+
         /// <summary>
         /// Response character set.
         /// </summary>

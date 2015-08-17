@@ -51,10 +51,10 @@ namespace EasyHttp.Codecs
 {
     using System.Text;
 
+    using EasyHttp.Contracts;
+
     using JsonFx.Serialization;
     using JsonFx.Serialization.Providers;
-
-    using EasyHttp.Contracts;
 
     public class DefaultEncoder : IEncoder
     {

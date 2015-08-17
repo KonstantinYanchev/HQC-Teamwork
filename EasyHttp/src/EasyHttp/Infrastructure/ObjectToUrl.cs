@@ -19,13 +19,6 @@
         /// URL's separator characters.
         /// </summary>
         protected abstract string PathSeparatorCharacter { get; }
-      
-        /// <summary>
-        /// Build of parameters as string from ProperyValue Objects.
-        /// </summary>
-        /// <param name="propertyValue"></param>
-        /// <returns></returns>
-        protected abstract string BuildParam(PropertyValue propertyValue);
 
         /// <summary>
         /// Get URL from parameters.
@@ -48,6 +41,14 @@
 
             return returnuri;
         }
+      
+        /// <summary>
+        /// Build of parameters as string from ProperyValue Objects.
+        /// </summary>
+        /// <param name="propertyValue"></param>
+        /// <returns></returns>
+        protected abstract string BuildParam(PropertyValue propertyValue);
+
         /// <summary>
         /// Get URL parameters.
         /// </summary>

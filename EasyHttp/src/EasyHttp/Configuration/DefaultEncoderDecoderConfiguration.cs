@@ -51,6 +51,10 @@ namespace EasyHttp.Configuration
 {
     using System.Collections.Generic;
 
+    using EasyHttp.Codecs;
+    using EasyHttp.Codecs.JsonFXExtensions;
+    using EasyHttp.Contracts;
+
     using JsonFx.Json;
     using JsonFx.Json.Resolvers;
     using JsonFx.Model.Filters;
@@ -58,13 +62,27 @@ namespace EasyHttp.Configuration
     using JsonFx.Serialization.Resolvers;
     using JsonFx.Xml;
     using JsonFx.Xml.Resolvers;
-    
-    using EasyHttp.Codecs;
-    using EasyHttp.Codecs.JsonFXExtensions;
-    using EasyHttp.Contracts;
 
     public class DefaultEncoderDecoderConfiguration : IEncoderDecoderConfiguration
     {
+        /// <summary>
+        /// Method for combining strategies.
+        /// </summary>
+        /// <returns>Ready combined strategy</returns>
+        public static CombinedResolverStrategy CombinedResolverStrategy()
+        {
+            return new CombinedResolverStrategy(
+                new JsonResolverStrategy(),
+                new DataContractResolverStrategy(),
+                new XmlResolverStrategy(),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.PascalCase),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.CamelCase),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange, "_"),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange, "-"),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Lowercase, "-"),
+                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Uppercase, "_"));
+        }
 
         /// <summary>
         /// Method which configurates default encoder.
@@ -108,25 +126,6 @@ namespace EasyHttp.Configuration
             var dataReaderProvider = new RegExBasedDataReaderProvider(readers);
 
             return new DefaultDecoder(dataReaderProvider);
-        }
-
-        /// <summary>
-        /// Method for combining strategies.
-        /// </summary>
-        /// <returns>Ready combined strategy</returns>
-        public static CombinedResolverStrategy CombinedResolverStrategy()
-        {
-            return new CombinedResolverStrategy(
-                new JsonResolverStrategy(),
-                new DataContractResolverStrategy(),
-                new XmlResolverStrategy(),
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.PascalCase),
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.CamelCase),
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange),
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange, "_"),
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.NoChange, "-"),
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Lowercase, "-"),
-                new ConventionResolverStrategy(ConventionResolverStrategy.WordCasing.Uppercase, "_"));
         }
     }
 }

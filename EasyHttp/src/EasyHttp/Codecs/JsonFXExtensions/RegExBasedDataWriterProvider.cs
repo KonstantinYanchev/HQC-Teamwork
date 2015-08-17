@@ -127,46 +127,6 @@ namespace EasyHttp.Codecs.JsonFXExtensions
         }
 
         /// <summary>
-        /// Get a data reader by file extention.
-        /// </summary>
-        /// <param name="extension">File extention by which to get the data provider</param>
-        /// <returns>Data Writer that corresponds to the required file extention, if such exist. Otherwise returns null</returns>
-        public IDataWriter Find(string extension)
-        {
-            extension = NormalizeExtension(extension);
-
-            IDataWriter writer;
-            if (this.writersByExt.TryGetValue(extension, out writer))
-            {
-                return writer;
-            }
-
-            return null;
-        }
-        /// <summary>
-        /// Get a data reader by content type.
-        /// </summary>
-        /// <param name="acceptHeader">String containing all acceptable content types.</param>
-        /// <param name="contentTypeHeader">String from which to get the content type.</param>
-        /// <returns>DataWriter that corresponds to the required content type if such exist. Otherwise returns null.</returns>
-        public IDataWriter Find(string acceptHeader, string contentTypeHeader)
-        {
-            foreach (var type in ParseHeaders(acceptHeader, contentTypeHeader))
-            {
-                var readers = from writer in this.writersByMime
-                              where Regex.Match(type, writer.Key, RegexOptions.Singleline).Success
-                              select writer;
-
-                if (readers.Count() > 0)
-                {
-                    return readers.First().Value;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Parse strings to get mime types out of them.
         /// </summary>
         /// <param name="accept">String containing all acceptable content types.</param>
@@ -192,6 +152,47 @@ namespace EasyHttp.Codecs.JsonFXExtensions
             {
                 yield return mime;
             }
+        }
+
+        /// <summary>
+        /// Get a data reader by file extention.
+        /// </summary>
+        /// <param name="extension">File extention by which to get the data provider</param>
+        /// <returns>Data Writer that corresponds to the required file extention, if such exist. Otherwise returns null</returns>
+        public IDataWriter Find(string extension)
+        {
+            extension = NormalizeExtension(extension);
+
+            IDataWriter writer;
+            if (this.writersByExt.TryGetValue(extension, out writer))
+            {
+                return writer;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get a data reader by content type.
+        /// </summary>
+        /// <param name="acceptHeader">String containing all acceptable content types.</param>
+        /// <param name="contentTypeHeader">String from which to get the content type.</param>
+        /// <returns>DataWriter that corresponds to the required content type if such exist. Otherwise returns null.</returns>
+        public IDataWriter Find(string acceptHeader, string contentTypeHeader)
+        {
+            foreach (var type in ParseHeaders(acceptHeader, contentTypeHeader))
+            {
+                var readers = from writer in this.writersByMime
+                              where Regex.Match(type, writer.Key, RegexOptions.Singleline).Success
+                              select writer;
+
+                if (readers.Count() > 0)
+                {
+                    return readers.First().Value;
+                }
+            }
+
+            return null;
         }
 
         private static IEnumerable<string> SplitTrim(string source, char ch)
