@@ -61,13 +61,13 @@ namespace EasyHttp.Http
     /// </summary>
     public class HttpClient
     {
-        private readonly string _baseUri;
+        private readonly string baseUri;
 
-        private readonly IDecoder _decoder;
+        private readonly IDecoder decoder;
 
-        private readonly IEncoder _encoder;
+        private readonly IEncoder encoder;
 
-        private readonly IUriComposer _uriComposer;
+        private readonly IUriComposer uriComposer;
 
         /// <summary>
         /// Client for sending Http request and Http responses.
@@ -84,11 +84,11 @@ namespace EasyHttp.Http
         /// <param name="composer">Composer for generating URI.</param>
         public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, IUriComposer composer)
         {
-            this._encoder = encoderDecoderConfiguration.GetEncoder();
-            this._decoder = encoderDecoderConfiguration.GetDecoder();
-            this._uriComposer = composer;
+            this.encoder = encoderDecoderConfiguration.GetEncoder();
+            this.decoder = encoderDecoderConfiguration.GetDecoder();
+            this.uriComposer = composer;
 
-            this.Request = new HttpRequest(this._encoder);
+            this.Request = new HttpRequest(this.encoder);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace EasyHttp.Http
         public HttpClient(string baseUri)
             : this(new DefaultEncoderDecoderConfiguration(), new UriComposer())
         {
-            this._baseUri = baseUri;
+            this.baseUri = baseUri;
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace EasyHttp.Http
         /// <param name="query">Reqest query.</param>
         private void InitRequest(string uri, HttpMethod method, object query)
         {
-            this.Request.Uri = this._uriComposer.Compose(this._baseUri, uri, query, this.Request.ParametersAsSegments);
+            this.Request.Uri = this.uriComposer.Compose(this.baseUri, uri, query, this.Request.ParametersAsSegments);
             this.Request.Data = null;
             this.Request.PutFilename = string.Empty;
             this.Request.Expect = false;
@@ -311,7 +311,7 @@ namespace EasyHttp.Http
         {
             var httpWebRequest = this.Request.PrepareRequest();
 
-            this.Response = new HttpResponse(this._decoder);
+            this.Response = new HttpResponse(this.decoder);
 
             this.Response.GetResponse(httpWebRequest, filename, this.StreamResponse);
 

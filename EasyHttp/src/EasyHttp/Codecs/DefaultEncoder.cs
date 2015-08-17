@@ -58,7 +58,7 @@ namespace EasyHttp.Codecs
 
     public class DefaultEncoder : IEncoder
     {
-        private readonly IDataWriterProvider _dataWriterProvider;
+        private readonly IDataWriterProvider dataWriterProvider;
 
         /// <summary>
         /// Default Encoder
@@ -66,7 +66,7 @@ namespace EasyHttp.Codecs
         /// <param name="dataWriterProvider">Object which provides lookup capabilities for finding matching IDataWriter.</param>
         public DefaultEncoder(IDataWriterProvider dataWriterProvider)
         {
-            this._dataWriterProvider = dataWriterProvider;
+            this.dataWriterProvider = dataWriterProvider;
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace EasyHttp.Codecs
                 return Encoding.UTF8.GetBytes((string)input);
             }
 
-            var serializer = this._dataWriterProvider.Find(contentType, contentType);
+            var serializer = this.dataWriterProvider.Find(contentType, contentType);
 
             if (serializer == null)
             {

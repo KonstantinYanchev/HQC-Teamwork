@@ -12,13 +12,13 @@
     /// </summary>
     public class MultiPartStreamer
     {
-        private readonly string _boundary;
+        private readonly string boundary;
 
-        private readonly string _boundaryCode;
+        private readonly string boundaryCode;
 
-        private readonly IList<FileData> _multipartFileData;
+        private readonly IList<FileData> multipartFileData;
 
-        private readonly IDictionary<string, object> _multipartFormData;
+        private readonly IDictionary<string, object> multipartFormData;
 
         /// <summary>
         /// Class for processing multipart requests/responses
@@ -27,11 +27,11 @@
         /// <param name="multipartFileData">File data from the multipart request/response</param>
         public MultiPartStreamer(IDictionary<string, object> multipartFormData, IList<FileData> multipartFileData)
         {
-            this._boundaryCode = DateTime.Now.Ticks.GetHashCode() + "548130";
-            this._boundary = string.Format("\r\n----------------{0}", this._boundaryCode);
+            this.boundaryCode = DateTime.Now.Ticks.GetHashCode() + "548130";
+            this.boundary = string.Format("\r\n----------------{0}", this.boundaryCode);
 
-            this._multipartFormData = multipartFormData;
-            this._multipartFileData = multipartFileData;
+            this.multipartFormData = multipartFormData;
+            this.multipartFileData = multipartFileData;
         }
 
         /// <summary>
@@ -40,20 +40,20 @@
         /// <param name="stream">Stream to use for the multipart data</param>
         public void StreamMultiPart(Stream stream)
         {
-            stream.WriteString(this._boundary);
+            stream.WriteString(this.boundary);
 
-            if (this._multipartFormData != null)
+            if (this.multipartFormData != null)
             {
-                foreach (var entry in this._multipartFormData)
+                foreach (var entry in this.multipartFormData)
                 {
                     stream.WriteString(CreateFormBoundaryHeader(entry.Key, entry.Value));
-                    stream.WriteString(this._boundary);
+                    stream.WriteString(this.boundary);
                 }
             }
 
-            if (this._multipartFileData != null)
+            if (this.multipartFileData != null)
             {
-                foreach (var fileData in this._multipartFileData)
+                foreach (var fileData in this.multipartFileData)
                 {
                     using (var file = new FileStream(fileData.Filename, FileMode.Open))
                     {
@@ -61,7 +61,7 @@
 
                         StreamFileContents(file, fileData, stream);
 
-                        stream.WriteString(this._boundary);
+                        stream.WriteString(this.boundary);
                     }
                 }
             }
@@ -96,7 +96,7 @@
         /// <returns>Content type as string.</returns>
         public string GetContentType()
         {
-            return string.Format("multipart/form-data; boundary=--------------{0}", this._boundaryCode);
+            return string.Format("multipart/form-data; boundary=--------------{0}", this.boundaryCode);
         }
 
         /// <summary>
@@ -106,25 +106,25 @@
         public long GetContentLength()
         {
             var ascii = new ASCIIEncoding();
-            long contentLength = ascii.GetBytes(this._boundary).Length;
+            long contentLength = ascii.GetBytes(this.boundary).Length;
 
             // Multipart Form
-            if (this._multipartFormData != null)
+            if (this.multipartFormData != null)
             {
-                foreach (var entry in this._multipartFormData)
+                foreach (var entry in this.multipartFormData)
                 {
                     contentLength += ascii.GetBytes(CreateFormBoundaryHeader(entry.Key, entry.Value)).Length; // header
-                    contentLength += ascii.GetBytes(this._boundary).Length;
+                    contentLength += ascii.GetBytes(this.boundary).Length;
                 }
             }
 
-            if (this._multipartFileData != null)
+            if (this.multipartFileData != null)
             {
-                foreach (var fileData in this._multipartFileData)
+                foreach (var fileData in this.multipartFileData)
                 {
                     contentLength += ascii.GetBytes(CreateFileBoundaryHeader(fileData)).Length;
                     contentLength += new FileInfo(fileData.Filename).Length;
-                    contentLength += ascii.GetBytes(this._boundary).Length;
+                    contentLength += ascii.GetBytes(this.boundary).Length;
                 }
             }
 

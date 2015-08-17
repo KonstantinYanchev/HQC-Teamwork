@@ -13,7 +13,7 @@
     /// </summary>
     public class RegExBasedDataReaderProvider : IDataReaderProvider
     {
-        private readonly IDictionary<string, IDataReader> _readersByMime =
+        private readonly IDictionary<string, IDataReader> readersByMime =
             new Dictionary<string, IDataReader>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
@@ -28,12 +28,12 @@
                 {
                     foreach (var contentType in reader.ContentType)
                     {
-                        if (string.IsNullOrEmpty(contentType) || this._readersByMime.ContainsKey(contentType))
+                        if (string.IsNullOrEmpty(contentType) || this.readersByMime.ContainsKey(contentType))
                         {
                             continue;
                         }
 
-                        this._readersByMime[contentType] = reader;
+                        this.readersByMime[contentType] = reader;
                     }
                 }
             }
@@ -48,7 +48,7 @@
         {
             var type = DataProviderUtility.ParseMediaType(contentTypeHeader);
 
-            var readers = this._readersByMime.Where(reader => Regex.Match(type, reader.Key, RegexOptions.Singleline).Success);
+            var readers = this.readersByMime.Where(reader => Regex.Match(type, reader.Key, RegexOptions.Singleline).Success);
 
             return readers.Any() ? readers.First().Value : null;
         }

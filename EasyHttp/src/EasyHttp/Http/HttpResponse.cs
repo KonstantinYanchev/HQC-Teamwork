@@ -62,9 +62,9 @@ namespace EasyHttp.Http
     /// </summary>
     public class HttpResponse
     {
-        private readonly IDecoder _decoder;
+        private readonly IDecoder decoder;
 
-        private HttpWebResponse _response;
+        private HttpWebResponse response;
 
         /// <summary>
         /// Http response.
@@ -72,7 +72,7 @@ namespace EasyHttp.Http
         /// <param name="decoder">Decoder for http response.</param>
         public HttpResponse(IDecoder decoder)
         {
-            this._decoder = decoder;
+            this.decoder = decoder;
         }
         /// <summary>
         /// Response character set.
@@ -204,7 +204,7 @@ namespace EasyHttp.Http
         {
             get
             {
-                return this._response.GetResponseStream();
+                return this.response.GetResponseStream();
             }
         }
 
@@ -215,7 +215,7 @@ namespace EasyHttp.Http
         {
             get
             {
-                return this._decoder.DecodeToDynamic(this.RawText, this.ContentType);
+                return this.decoder.DecodeToDynamic(this.RawText, this.ContentType);
             }
         }
 
@@ -234,10 +234,10 @@ namespace EasyHttp.Http
         {
             if (overrideContentType != null)
             {
-                return this._decoder.DecodeToStatic<T>(this.RawText, overrideContentType);
+                return this.decoder.DecodeToStatic<T>(this.RawText, overrideContentType);
             }
 
-            return this._decoder.DecodeToStatic<T>(this.RawText, this.ContentType);
+            return this.decoder.DecodeToStatic<T>(this.RawText, this.ContentType);
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace EasyHttp.Http
         {
             try
             {
-                this._response = (HttpWebResponse)request.GetResponse();
+                this.response = (HttpWebResponse)request.GetResponse();
             }
             catch (WebException webException)
             {
@@ -259,7 +259,7 @@ namespace EasyHttp.Http
                     throw;
                 }
 
-                this._response = (HttpWebResponse)webException.Response;
+                this.response = (HttpWebResponse)webException.Response;
             }
 
             this.GetHeaders();
@@ -269,7 +269,7 @@ namespace EasyHttp.Http
                 return;
             }
 
-            using (var stream = this._response.GetResponseStream())
+            using (var stream = this.response.GetResponseStream())
             {
                 if (stream == null)
                 {
@@ -307,16 +307,16 @@ namespace EasyHttp.Http
         /// </summary>
         private void GetHeaders()
         {
-            this.CharacterSet = this._response.CharacterSet;
-            this.ContentType = this._response.ContentType;
-            this.StatusCode = this._response.StatusCode;
-            this.StatusDescription = this._response.StatusDescription;
-            this.Cookies = this._response.Cookies;
-            this.ContentEncoding = this._response.ContentEncoding;
-            this.ContentLength = this._response.ContentLength;
+            this.CharacterSet = this.response.CharacterSet;
+            this.ContentType = this.response.ContentType;
+            this.StatusCode = this.response.StatusCode;
+            this.StatusDescription = this.response.StatusDescription;
+            this.Cookies = this.response.Cookies;
+            this.ContentEncoding = this.response.ContentEncoding;
+            this.ContentLength = this.response.ContentLength;
             this.Date = DateTime.Now;
-            this.LastModified = this._response.LastModified;
-            this.Server = this._response.Server;
+            this.LastModified = this.response.LastModified;
+            this.Server = this.response.Server;
 
             if (!string.IsNullOrEmpty(this.GetHeader("Age")))
             {
@@ -342,7 +342,7 @@ namespace EasyHttp.Http
             // this.Allow = ...
             // this.CacheControl = ...
             // this.Pragma = ...
-            this.RawHeaders = this._response.Headers;
+            this.RawHeaders = this.response.Headers;
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace EasyHttp.Http
         /// <returns>The value of the header</returns>
         private string GetHeader(string header)
         {
-            var headerValue = this._response.GetResponseHeader(header);
+            var headerValue = this.response.GetResponseHeader(header);
 
             return headerValue.Replace("\"", string.Empty);
         }

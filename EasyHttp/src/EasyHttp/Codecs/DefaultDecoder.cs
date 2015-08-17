@@ -9,7 +9,7 @@
 
     public class DefaultDecoder : IDecoder
     {
-        private readonly IDataReaderProvider _dataReaderProvider;
+        private readonly IDataReaderProvider dataReaderProvider;
 
         /// <summary>
         /// Default decoder.
@@ -17,7 +17,7 @@
         /// <param name="dataReaderProvider">Object which provides lookup capabilities for finding matching IDataReader.</param>
         public DefaultDecoder(IDataReaderProvider dataReaderProvider)
         {
-            this._dataReaderProvider = dataReaderProvider;
+            this.dataReaderProvider = dataReaderProvider;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@
 
         private IDataReader ObtainDeserializer(string contentType)
         {
-            var deserializer = this._dataReaderProvider.Find(contentType);
+            var deserializer = this.dataReaderProvider.Find(contentType);
 
             if (deserializer == null)
             {
