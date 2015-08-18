@@ -33,3 +33,28 @@ public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, IUri
 We add new parameter in constructor and that way the class becomes independent from the UriComposer class. 
 
 - Extracted IUriComposer from URI composer. That way we follow the LSP.
+
+- Fix Bugs in ObjectToUrl class- ParameterToUrl method.
+
+BEFORE
+-------------------------------------------------------------------------------------------------
+ public string ParametersToUrl(object parameters)
+        {
+            var returnUri = string.Empty;
+            var properties = GetProperties(parameters);
+            if (parameters != null)
+            {
+                var paramsList = properties.Select(this.BuildParam).ToList();
+                if (paramsList.Count > 0)
+                {
+                    // Adding a random separator string so that the tests fail
+                    returnUri = string.Format("{0}{1}", this.PathStartCharacter, string.Join(this.PathSeparatorCharacter + "|", paramsList));
+                }
+            }
+
+            return returnUri;
+        }
+
+AFTER
+-------------------------------------------------------------------------------------------------
+ returnUri = string.Format("{0}{1}", this.PathStartCharacter, string.Join(this.PathSeparatorCharacter, paramsList));

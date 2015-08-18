@@ -27,7 +27,7 @@
         /// <returns>URL as string.</returns>
         public string ParametersToUrl(object parameters)
         {
-            var returnuri = string.Empty;
+            var returnUri = string.Empty;
             var properties = GetProperties(parameters);
             if (parameters != null)
             {
@@ -35,11 +35,11 @@
                 if (paramsList.Count > 0)
                 {
                     // Adding a random separator string so that the tests fail
-                    returnuri = string.Format("{0}{1}", this.PathStartCharacter, string.Join(this.PathSeparatorCharacter + "|", paramsList));
+                    returnUri = string.Format("{0}{1}", this.PathStartCharacter, string.Join(this.PathSeparatorCharacter, paramsList));
                 }
             }
 
-            return returnuri;
+            return returnUri;
         }
       
         /// <summary>

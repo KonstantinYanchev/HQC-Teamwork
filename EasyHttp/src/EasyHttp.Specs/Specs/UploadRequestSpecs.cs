@@ -29,8 +29,7 @@ namespace EasyHttp.Specs.Specs
 
                 httpClient.PutFile(
                     string.Format("{0}/fileupload/test.jpg", "http://localhost:16000"),
-                    imageFile,
-                    "image/jpeg");
+                    imageFile,"image/jpeg");
             };
 
         private It should_upload_it_succesfully =
