@@ -2,6 +2,9 @@
 {
     using System.Net;
 
+    using ServiceStack.Common.Web;
+    using ServiceStack.ServiceInterface;
+
     public class RedirectorService : RestServiceBase<Redirect>
     {
         public override object OnGet(Redirect request)

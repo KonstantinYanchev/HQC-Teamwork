@@ -1,5 +1,7 @@
 namespace EasyHttp.Specs.Helpers
 {
+    using ServiceStack.ServiceInterface;
+
     public class HelloService : RestServiceBase<Hello>
     {
         public override object OnGet(Hello request)

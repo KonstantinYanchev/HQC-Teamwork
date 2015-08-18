@@ -2,6 +2,9 @@ namespace EasyHttp.Specs.Helpers
 {
     using System.Net;
 
+    using ServiceStack.Common.Web;
+    using ServiceStack.ServiceInterface;
+
     public class CookieService : RestServiceBase<CookieInfo>
     {
         public override object OnGet(CookieInfo request)

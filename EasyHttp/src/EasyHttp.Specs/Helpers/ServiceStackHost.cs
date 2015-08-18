@@ -1,6 +1,6 @@
 ﻿namespace EasyHttp.Specs.Helpers
 {
-    using System.ComponentModel;
+    using ServiceStack.WebHost.Endpoints;
 
     // Define the Web Services AppHost
     public class ServiceStackHost : AppHostHttpListenerBase
@@ -10,7 +10,7 @@
         {
         }
 
-        public override void Configure(Container container)
+        public override void Configure(Funq.Container container)
         {
             Routes.Add<Hello>("/hello").Add<Hello>("/hello/{Name}");
             Routes.Add<Files>("/fileupload/{Name}").Add<Files>("/fileupload");

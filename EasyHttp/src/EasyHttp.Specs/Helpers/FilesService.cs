@@ -2,6 +2,9 @@
 {
     using System.Net;
 
+    using ServiceStack.Common.Web;
+    using ServiceStack.ServiceInterface;
+
     public class FilesService : RestServiceBase<Files>
     {
         public override object OnPut(Files request)
