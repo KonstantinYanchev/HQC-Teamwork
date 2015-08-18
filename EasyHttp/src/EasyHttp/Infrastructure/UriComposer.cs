@@ -1,23 +1,24 @@
 namespace EasyHttp.Infrastructure
 {
     using System;
+    using Contracts;
 
     /// <summary>
     /// Class used to compose URIs.
     /// </summary>
-    public class UriComposer
+    public class UriComposer : IUriComposer
     {
-        private readonly ObjectToUrlParameters _objectToUrlParameters;
+        private readonly ObjectToUrlParameters objectToUrlParameters;
 
-        private readonly ObjectToUrlSegments _objectToUrlSegments;
+        private readonly ObjectToUrlSegments objectToUrlSegments;
 
         /// <summary>
         /// Class used to compose URIs.
         /// </summary>
         public UriComposer()
         {
-            this._objectToUrlParameters = new ObjectToUrlParameters();
-            this._objectToUrlSegments = new ObjectToUrlSegments();
+            this.objectToUrlParameters = new ObjectToUrlParameters();
+            this.objectToUrlSegments = new ObjectToUrlSegments();
         }
          
         /// <summary>
@@ -40,13 +41,13 @@ namespace EasyHttp.Infrastructure
             if (parametersAsSegments)
             {
                 returnUri = query != null
-                                ? string.Concat(returnUri, this._objectToUrlSegments.ParametersToUrl(query))
+                                ? string.Concat(returnUri, this.objectToUrlSegments.ParametersToUrl(query))
                                 : returnUri;
             }
             else
             {
                 returnUri = query != null
-                                ? string.Concat(returnUri, this._objectToUrlParameters.ParametersToUrl(query))
+                                ? string.Concat(returnUri, this.objectToUrlParameters.ParametersToUrl(query))
                                 : returnUri;
             }
 

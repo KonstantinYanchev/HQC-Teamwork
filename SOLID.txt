@@ -2,10 +2,12 @@ S- Single responsibility.
 The single responsibility principle states that every class should have responsibility over a single part of the functionality provided by the software.
 
 /FIRST EXAMPLE
+ ------------------------------------------------------------------
   - public class DefaultDecoder : IDecoder
 The DefaultDecoder is concerned only with decoding data.
 
 /SECOND EXAMPLE
+ ------------------------------------------------------------------
   - public class DefaultEncoder : IEncoder
 The DefaultEncoder is concerned only with encoding data.
 
@@ -17,18 +19,63 @@ O- Open close principe.
 Open/closed principle states "software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification"; that is, such an entity can allow its behaviour to be extended without modifying its source code.
 
 /FIRST EXAMPLE
+ ------------------------------------------------------------------
    - public class HttpRequest
 Can be inherited and in that way its funcionality can be extended.
 Its private methods(SetupData,SetupBody,SetupAuthentication, etc.) ensure that third parties can not modify its funcionality.
 This way we follow OCP which is described above.
 
 /SECOND EXAMPLE
+ ------------------------------------------------------------------
    -  public class MultiPartStreamer
 Can be inherited and in that way its funcionality can be extended.
 Its private methods(CreateFormBoundaryHeader,CreateFileBoundaryHeader) ensure that third parties can not modify its funcionality.
 This way we follow OCP which is described above.
 
+
+
 L- Liskov substitution.
+ It states that, in a computer program, if S is a subtype of T, then objects of type T may be replaced with objects of type S (i.e., objects of type S may substitute objects of type T) without altering any of the desirable properties of that program (correctness, task performed, etc.). 
+
+ /FIRST EXAMPLE
+ ------------------------------------------------------------------
+   -public class UriComposer : IUriComposer 
+
+   BEFORE
+------------------------------------------------------------------
+ public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, UriComposer composer)
+
+ AFTER
+------------------------------------------------------------------
+ public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, IUriComposer composer)
+ 
+ SUMMARY:Constructor accept IUriComposer. That way we can create many different classes implementing the interface, and all of them can be used.
+ 
+ 
+ /SECOND EXAMPLE
+ ------------------------------------------------------------------
+ - public class HttpRequest	
+  private readonly IEncoder _encoder;
+  public HttpRequest(IEncoder encoder)
+  {
+  this._encoder = encoder;
+  }
+  private void SetupData()
+	{
+		var bytes = this._encoder.Encode(this.Data, this.ContentType);
+
+		if (bytes.Length > 0)
+		{
+			this.httpWebRequest.ContentLength = bytes.Length;
+		}
+
+		var requestStream = this.httpWebRequest.GetRequestStream();
+
+		requestStream.Write(bytes, 0, bytes.Length);
+
+		requestStream.Close();
+	}
+SUMMARY:Constructor accept IEncoder. That way we can create many different classes implementing the interface, and all of them can be used.
 
 
 

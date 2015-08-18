@@ -51,14 +51,14 @@ namespace EasyHttp.Codecs.JsonFXExtensions
 {
     using System.Collections.Generic;
 
+    using EasyHttp.Http;
+
     using JsonFx.Model;
     using JsonFx.Serialization;
 
-    using EasyHttp.Http;
-
     public class UrlEncoderWriter : ModelWriter
     {
-        private readonly string[] _contentTypes;
+        private readonly string[] contentTypes;
 
         /// <summary>
         /// Writer for encoded URL.
@@ -68,7 +68,7 @@ namespace EasyHttp.Codecs.JsonFXExtensions
         public UrlEncoderWriter(DataWriterSettings settings, params string[] contentTypes)
             : base(settings)
         {
-            this._contentTypes = contentTypes;
+            this.contentTypes = contentTypes;
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace EasyHttp.Codecs.JsonFXExtensions
         {
             get
             {
-                if (this._contentTypes != null)
+                if (this.contentTypes != null)
                 {
-                    foreach (var contentType in this._contentTypes)
+                    foreach (var contentType in this.contentTypes)
                     {
                         yield return contentType;
                     }

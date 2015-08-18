@@ -1,4 +1,4 @@
-﻿namespace EasyHttp.Contracts
+namespace EasyHttp.Contracts
 {
     public interface IUriComposer
     {

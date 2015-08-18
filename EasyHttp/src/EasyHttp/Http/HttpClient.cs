@@ -52,22 +52,23 @@ namespace EasyHttp.Http
     using System.Collections.Generic;
     using System.Security.Cryptography.X509Certificates;
 
-    using EasyHttp.Contracts;
     using EasyHttp.Configuration;
+    using EasyHttp.Contracts;
     using EasyHttp.Exceptions;
     using EasyHttp.Infrastructure;
+
     /// <summary>
     /// Client for sending Http request and Http responses.
     /// </summary>
     public class HttpClient
     {
-        private readonly string _baseUri;
+        private readonly string baseUri;
 
-        private readonly IDecoder _decoder;
+        private readonly IDecoder decoder;
 
-        private readonly IEncoder _encoder;
+        private readonly IEncoder encoder;
 
-        private readonly IUriComposer _uriComposer;
+        private readonly IUriComposer uriComposer;
 
         /// <summary>
         /// Client for sending Http request and Http responses.
@@ -84,11 +85,11 @@ namespace EasyHttp.Http
         /// <param name="composer">Composer for generating URI.</param>
         public HttpClient(IEncoderDecoderConfiguration encoderDecoderConfiguration, IUriComposer composer)
         {
-            this._encoder = encoderDecoderConfiguration.GetEncoder();
-            this._decoder = encoderDecoderConfiguration.GetDecoder();
-            this._uriComposer = composer;
+            this.encoder = encoderDecoderConfiguration.GetEncoder();
+            this.decoder = encoderDecoderConfiguration.GetDecoder();
+            this.uriComposer = composer;
 
-            this.Request = new HttpRequest(this._encoder);
+            this.Request = new HttpRequest(this.encoder);
         }
 
         /// <summary>
@@ -98,7 +99,7 @@ namespace EasyHttp.Http
         public HttpClient(string baseUri)
             : this(new DefaultEncoderDecoderConfiguration(), new UriComposer())
         {
-            this._baseUri = baseUri;
+            this.baseUri = baseUri;
         }
 
         /// <summary>
@@ -125,25 +126,6 @@ namespace EasyHttp.Http
         /// Http request.
         /// </summary>
         public HttpRequest Request { get; private set; }
-
-        /// <summary>
-        /// Initialize the Http request. 
-        /// </summary>
-        /// <param name="uri">Address to which the request is sent.</param>
-        /// <param name="method">Http method for sending the request.</param>
-        /// <param name="query">Reqest query.</param>
-        private void InitRequest(string uri, HttpMethod method, object query)
-        {
-            this.Request.Uri = this._uriComposer.Compose(this._baseUri, uri, query, this.Request.ParametersAsSegments);
-            this.Request.Data = null;
-            this.Request.PutFilename = string.Empty;
-            this.Request.Expect = false;
-            this.Request.KeepAlive = true;
-            this.Request.MultiPartFormData = null;
-            this.Request.MultiPartFileData = null;
-            this.Request.ContentEncoding = null;
-            this.Request.Method = method;
-        }
 
         /// <summary>
         /// Http request for getting a file.
@@ -191,11 +173,11 @@ namespace EasyHttp.Http
         public HttpResponse Post(string uri, object data, string contentType, object query = null)
         {
             // return null;
-             this.InitRequest(uri, HttpMethod.POST, query);
-             this.InitData(data, contentType);
-             return ProcessRequest();
+            this.InitRequest(uri, HttpMethod.POST, query);
+            this.InitData(data, contentType);
+            return this.ProcessRequest();
         }
-        
+
         /// <summary>
         /// Http patch request.
         /// </summary>
@@ -248,20 +230,6 @@ namespace EasyHttp.Http
         }
 
         /// <summary>
-        /// Initialize request data.
-        /// </summary>
-        /// <param name="data">Data that is initialized.</param>
-        /// <param name="contentType">Content type of the data.</param>
-        private void InitData(object data, string contentType)
-        {
-            if (data != null)
-            {
-                this.Request.ContentType = contentType;
-                this.Request.Data = data;
-            }
-        }
-
-        /// <summary>
         /// Http Delete request.
         /// </summary>
         /// <param name="uri">Address to which the request is sent.</param>
@@ -303,27 +271,6 @@ namespace EasyHttp.Http
         }
 
         /// <summary>
-        /// Method for proccesing an Http request.
-        /// </summary>
-        /// <param name="filename">File name.</param>
-        /// <returns>Http response.</returns>
-        private HttpResponse ProcessRequest(string filename = "")
-        {
-            var httpWebRequest = this.Request.PrepareRequest();
-
-            this.Response = new HttpResponse(this._decoder);
-
-            this.Response.GetResponse(httpWebRequest, filename, this.StreamResponse);
-
-            if (this.ThrowExceptionOnHttpError && this.IsHttpError())
-            {
-                throw new HttpException(this.Response.StatusCode, this.Response.StatusDescription);
-            }
-
-            return this.Response;
-        }
-
-        /// <summary>
         /// Method for adding client certificates.
         /// </summary>
         /// <param name="certificates">Certificates for adding.</param>
@@ -335,6 +282,60 @@ namespace EasyHttp.Http
             }
 
             this.Request.ClientCertificates.AddRange(certificates);
+        }
+
+        /// <summary>
+        /// Initialize the Http request. 
+        /// </summary>
+        /// <param name="uri">Address to which the request is sent.</param>
+        /// <param name="method">Http method for sending the request.</param>
+        /// <param name="query">Reqest query.</param>
+        private void InitRequest(string uri, HttpMethod method, object query)
+        {
+            this.Request.Uri = this.uriComposer.Compose(this.baseUri, uri, query, this.Request.ParametersAsSegments);
+            this.Request.Data = null;
+            this.Request.PutFilename = string.Empty;
+            this.Request.Expect = false;
+            this.Request.KeepAlive = true;
+            this.Request.MultiPartFormData = null;
+            this.Request.MultiPartFileData = null;
+            this.Request.ContentEncoding = null;
+            this.Request.Method = method;
+        }
+
+        /// <summary>
+        /// Initialize request data.
+        /// </summary>
+        /// <param name="data">Data that is initialized.</param>
+        /// <param name="contentType">Content type of the data.</param>
+        private void InitData(object data, string contentType)
+        {
+            if (data != null)
+            {
+                this.Request.ContentType = contentType;
+                this.Request.Data = data;
+            }
+        }
+
+        /// <summary>
+        /// Method for proccesing an Http request.
+        /// </summary>
+        /// <param name="filename">File name.</param>
+        /// <returns>Http response.</returns>
+        private HttpResponse ProcessRequest(string filename = "")
+        {
+            var httpWebRequest = this.Request.PrepareRequest();
+
+            this.Response = new HttpResponse(this.decoder);
+
+            this.Response.GetResponse(httpWebRequest, filename, this.StreamResponse);
+
+            if (this.ThrowExceptionOnHttpError && this.IsHttpError())
+            {
+                throw new HttpException(this.Response.StatusCode, this.Response.StatusDescription);
+            }
+
+            return this.Response;
         }
 
         /// <summary>

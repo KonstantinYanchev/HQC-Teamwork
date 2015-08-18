@@ -1,0 +1,30 @@
+Design Patterns
+
+1. Creational design patterns.
+Factory method design pattern
+- A superclass specifies all standard and generic behavior, and then delegates the creation details to subclasses.
+---------------------------------------------
+	public interface IEncoderDecoderConfiguration
+    {
+        IEncoder GetEncoder();
+
+        IDecoder GetDecoder();
+    }
+---------------------------------------------
+    public class DefaultEncoderDecoderConfiguration : IEncoderDecoderConfiguration
+    {
+        public IEncoder GetEncoder()
+        {
+            return new DefaultEncoder();
+        }
+        public IDecoder GetDecoder()
+        {
+            return new DefaultDecoder();
+        }
+    }
+---------------------------------------------
+SUMMARY: IEncoderDecoderConfiguration specifies the generic behaviour for creating decoders and encoders and leaves the implementation to any subclass that implements it like DefaultEncoderDecoderConfiguration.
+
+2.Behavioral design patterns.
+
+3. Structural design patterns.

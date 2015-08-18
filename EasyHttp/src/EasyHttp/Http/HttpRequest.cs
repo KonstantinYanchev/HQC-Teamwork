@@ -49,13 +49,13 @@ namespace EasyHttp.Http
     /// </summary>
     public class HttpRequest
     {
-        private readonly IEncoder _encoder;
+        private readonly IEncoder encoder;
 
-        private HttpRequestCachePolicy _cachePolicy;
+        private HttpRequestCachePolicy cachePolicy;
 
-        private string _password;
+        private string password;
 
-        private string _username;
+        private string username;
 
         private CookieContainer cookieContainer;
 
@@ -80,7 +80,7 @@ namespace EasyHttp.Http
                 HttpContentTypes.TextHtml,
                 HttpContentTypes.ApplicationXml,
                 HttpContentTypes.ApplicationJson);
-            this._encoder = encoder;
+            this.encoder = encoder;
 
             this.Timeout = 100000; // http://msdn.microsoft.com/en-us/library/system.net.httpwebrequest.timeout.aspx
 
@@ -256,8 +256,63 @@ namespace EasyHttp.Http
         /// <param name="password">Authentication password.</param>
         public void SetBasicAuthentication(string username, string password)
         {
-            this._username = username;
-            this._password = password;
+            this.username = username;
+            this.password = password;
+        }
+
+        /// <summary>
+        /// Method for adding additional headers.
+        /// </summary>
+        /// <param name="header">Name of the header that will be added.</param>
+        /// <param name="value">Value of the header that will be added.</param>
+        public void AddExtraHeader(string header, object value)
+        {
+            if (value != null && !this.RawHeaders.ContainsKey(header))
+            {
+                this.RawHeaders.Add(header, value);
+            }
+        }
+
+        /// <summary>
+        /// Method for preparing request for sending.
+        /// </summary>
+        /// <returns>Http request ready to be sent.</returns>
+        public HttpWebRequest PrepareRequest()
+        {
+            this.httpWebRequest = (HttpWebRequest)WebRequest.Create(this.Uri);
+            this.httpWebRequest.AllowAutoRedirect = this.AllowAutoRedirect;
+            this.SetupHeader();
+
+            this.SetupBody();
+
+            return this.httpWebRequest;
+        }
+
+        /// <summary>
+        /// Method for setting  the cache control to no-cache.
+        /// </summary>
+        public void SetCacheControlToNoCache()
+        {
+            this.cachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+        }
+
+        /// <summary>
+        /// Method for setting the cache control with max age.
+        /// </summary>
+        /// <param name="maxAge">Maximum age for keeping the cache.</param>
+        public void SetCacheControlWithMaxAge(TimeSpan maxAge)
+        {
+            this.cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAge, maxAge);
+        }
+
+        public void SetCacheControlWithMaxAgeAndMaxStale(TimeSpan maxAge, TimeSpan maxStale)
+        {
+            this.cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAgeAndMaxStale, maxAge, maxStale);
+        }
+
+        public void SetCacheControlWithMaxAgeAndMinFresh(TimeSpan maxAge, TimeSpan minFresh)
+        {
+            this.cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAgeAndMinFresh, maxAge, minFresh);
         }
 
         /// <summary>
@@ -276,7 +331,7 @@ namespace EasyHttp.Http
             this.httpWebRequest.Method = this.Method.ToString();
             this.httpWebRequest.UserAgent = this.UserAgent;
             this.httpWebRequest.Referer = this.Referer;
-            this.httpWebRequest.CachePolicy = this._cachePolicy;
+            this.httpWebRequest.CachePolicy = this.cachePolicy;
             this.httpWebRequest.KeepAlive = this.KeepAlive;
             this.httpWebRequest.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
                                                          | DecompressionMethods.None;
@@ -334,7 +389,6 @@ namespace EasyHttp.Http
             }
         }
 
-
         private bool AcceptAllCertifications(
             object sender,
             X509Certificate certificate,
@@ -342,19 +396,6 @@ namespace EasyHttp.Http
             SslPolicyErrors sslpolicyerrors)
         {
             return true;
-        }
-
-        /// <summary>
-        /// Method for adding additional headers.
-        /// </summary>
-        /// <param name="header">Name of the header that will be added.</param>
-        /// <param name="value">Value of the header that will be added.</param>
-        public void AddExtraHeader(string header, object value)
-        {
-            if (value != null && !this.RawHeaders.ContainsKey(header))
-            {
-                this.RawHeaders.Add(header, value);
-            }
         }
 
         /// <summary>
@@ -381,7 +422,7 @@ namespace EasyHttp.Http
         /// </summary>
         private void SetupData()
         {
-            var bytes = this._encoder.Encode(this.Data, this.ContentType);
+            var bytes = this.encoder.Encode(this.Data, this.ContentType);
 
             if (bytes.Length > 0)
             {
@@ -438,21 +479,6 @@ namespace EasyHttp.Http
         }
 
         /// <summary>
-        /// Method for preparing request for sending.
-        /// </summary>
-        /// <returns>Http request ready to be sent.</returns>
-        public HttpWebRequest PrepareRequest()
-        {
-            this.httpWebRequest = (HttpWebRequest)WebRequest.Create(this.Uri);
-            this.httpWebRequest.AllowAutoRedirect = this.AllowAutoRedirect;
-            this.SetupHeader();
-
-            this.SetupBody();
-
-            return this.httpWebRequest;
-        }
-
-        /// <summary>
         /// Method for seeting up client certificates.
         /// </summary>
         private void SetupClientCertificates()
@@ -474,42 +500,15 @@ namespace EasyHttp.Http
 
             if (this.ForceBasicAuth)
             {
-                string authInfo = this._username + ":" + this._password;
+                string authInfo = this.username + ":" + this.password;
                 authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
                 this.httpWebRequest.Headers["Authorization"] = "Basic " + authInfo;
             }
             else
             {
-                var networkCredential = new NetworkCredential(this._username, this._password);
+                var networkCredential = new NetworkCredential(this.username, this.password);
                 this.httpWebRequest.Credentials = networkCredential;
             }
-        }
-
-        /// <summary>
-        /// Method for setting  the cache control to no-cache.
-        /// </summary>
-        public void SetCacheControlToNoCache()
-        {
-            this._cachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
-        }
-
-        /// <summary>
-        /// Method for setting the cache control with max age.
-        /// </summary>
-        /// <param name="maxAge">Maximum age for keeping the cache.</param>
-        public void SetCacheControlWithMaxAge(TimeSpan maxAge)
-        {
-            this._cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAge, maxAge);
-        }
-
-        public void SetCacheControlWithMaxAgeAndMaxStale(TimeSpan maxAge, TimeSpan maxStale)
-        {
-            this._cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAgeAndMaxStale, maxAge, maxStale);
-        }
-
-        public void SetCacheControlWithMaxAgeAndMinFresh(TimeSpan maxAge, TimeSpan minFresh)
-        {
-            this._cachePolicy = new HttpRequestCachePolicy(HttpCacheAgeControl.MaxAgeAndMinFresh, maxAge, minFresh);
         }
     }
 }

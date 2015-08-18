@@ -1,6 +1,5 @@
 ﻿namespace EasyHttp.Http
 {
-
     /// <summary>
     /// Types of Http conteng encoding.
     /// </summary>

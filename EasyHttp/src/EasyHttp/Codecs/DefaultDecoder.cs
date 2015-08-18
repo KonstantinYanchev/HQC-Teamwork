@@ -2,14 +2,14 @@
 {
     using System;
 
+    using EasyHttp.Contracts;
+
     using JsonFx.Serialization;
     using JsonFx.Serialization.Providers;
 
-    using EasyHttp.Contracts;
-
     public class DefaultDecoder : IDecoder
     {
-        private readonly IDataReaderProvider _dataReaderProvider;
+        private readonly IDataReaderProvider dataReaderProvider;
 
         /// <summary>
         /// Default decoder.
@@ -17,7 +17,7 @@
         /// <param name="dataReaderProvider">Object which provides lookup capabilities for finding matching IDataReader.</param>
         public DefaultDecoder(IDataReaderProvider dataReaderProvider)
         {
-            this._dataReaderProvider = dataReaderProvider;
+            this.dataReaderProvider = dataReaderProvider;
         }
 
         /// <summary>
@@ -51,18 +51,6 @@
             return deserializer.Read(parsedText);
         }
 
-        private IDataReader ObtainDeserializer(string contentType)
-        {
-            var deserializer = this._dataReaderProvider.Find(contentType);
-
-            if (deserializer == null)
-            {
-                throw new SerializationException("The encoding requested does not have a corresponding decoder");
-            }
-
-            return deserializer;
-        }
-
         private static string NormalizeInputRemovingAmpersands(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -73,6 +61,18 @@
             // this is a hack 
             var parsedText = input.Replace("\"@", "\"");
             return parsedText;
+        }
+
+        private IDataReader ObtainDeserializer(string contentType)
+        {
+            var deserializer = this.dataReaderProvider.Find(contentType);
+
+            if (deserializer == null)
+            {
+                throw new SerializationException("The encoding requested does not have a corresponding decoder");
+            }
+
+            return deserializer;
         }
     }
 }

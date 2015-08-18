@@ -86,6 +86,7 @@ namespace EasyHttp.Exceptions
             : base(message)
         {
         }
+
         /// <summary>
         ///  Represents error that occure when Http error ocures.
         /// </summary>
