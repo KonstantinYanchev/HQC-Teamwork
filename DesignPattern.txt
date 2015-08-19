@@ -26,11 +26,13 @@ Factory method design pattern
 SUMMARY: IEncoderDecoderConfiguration specifies the generic behaviour for creating decoders and encoders and leaves the implementation to any subclass that implements it like DefaultEncoderDecoderConfiguration.
 
 2.Behavioral design patterns.
+
+
+3. Structural design patterns.
+
 Facade design pattern
 
 Facade design pattern is used to deliver convenient interface from higher level to a group of subsystems or single complex subsystem.
 
 
 The class HttpClient is a facade because it hides the complexities of the system. It generates an IEncoder, IDecoder, IUriComposer and an HttpRequest. It provides an easy-to-use interface to the client with which the client can access the system with the methods GetAsFile, Get, Options, Post, Patch, Put, Delete, Head, PutFile and AddClientCertificates.
-
-3. Structural design patterns.
