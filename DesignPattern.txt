@@ -27,6 +27,12 @@ SUMMARY: IEncoderDecoderConfiguration specifies the generic behaviour for creati
 
 2.Behavioral design patterns.
 
+Template method design pattern 
+
+Define the skeleton of an algorithm in an operation, deferring some steps to client subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm's structure.
+
+The class ObjectToUrl is a template. It defines the algorithm for getting a Url from parameters (the ParametersToUrl method) and leaves the implementation of the BuildParam method, PathStartCharacter and PathSeparatorCharacter to child classes. 
+
 
 3. Structural design patterns.
 

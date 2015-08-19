@@ -6,6 +6,14 @@
 
 - Adding XML Documentation.
 
+- Renamed all fields starting with an underscore
+
+- Moved all private methods after public methods and non-static methods after static methods
+
+- Arranged usings alphabethically
+
+- Removed empty lines and added empty lines where necessary
+
 - Implemented Dependency inversion principle in HTTP Client.
 BEFORE
 -------------------------------------------------------------------------------------------------
