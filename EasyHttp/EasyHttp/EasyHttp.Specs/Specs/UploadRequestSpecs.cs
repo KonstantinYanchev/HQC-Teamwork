@@ -25,7 +25,7 @@ namespace EasyHttp.Specs.Specs
 
         private Because of = () =>
             {
-                var imageFile = Path.Combine("Helpers", "test.jpg");
+                var imageFile = Path.Combine("..\\EasyHttp\\EasyHttp.Specs\\Helpers", "test.jpg");
 
                 httpClient.PutFile(
                     string.Format("{0}/fileupload/test.jpg", "http://localhost:16000"),
@@ -51,7 +51,7 @@ namespace EasyHttp.Specs.Specs
 
         private Because of = () =>
             {
-                var imageFile = Path.Combine("Helpers", "test.jpg");
+                var imageFile = Path.Combine("..\\EasyHttp\\EasyHttp.Specs\\Helpers", "test.jpg");
 
                 IDictionary<string, object> data = new Dictionary<string, object>();
 

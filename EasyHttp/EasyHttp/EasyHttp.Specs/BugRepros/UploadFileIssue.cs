@@ -18,7 +18,7 @@
 
         private Because of = () =>
             {
-                var filename = Path.Combine("Helpers", "test.xml");
+                var filename = Path.Combine("..\\EasyHttp\\EasyHttp.Specs\\Helpers", "test.xml");
 
                 IDictionary<string, object> data = new Dictionary<string, object>();
 

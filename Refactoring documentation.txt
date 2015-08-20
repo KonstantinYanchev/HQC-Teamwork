@@ -66,3 +66,8 @@ BEFORE
 AFTER
 -------------------------------------------------------------------------------------------------
  returnUri = string.Format("{0}{1}", this.PathStartCharacter, string.Join(this.PathSeparatorCharacter, paramsList));
+
+
+- Fix Bugs in Integration tests: Should uploaded successufully.
+ var imageFile = Path.Combine("..\\EasyHttp\\EasyHttp.Specs\\Helpers", "test.jpg");
+Incorect folder in FilePath.
