@@ -58,8 +58,6 @@ namespace EasyHttp.Codecs.JsonFXExtensions
     using JsonFx.Serialization;
     using JsonFx.Serialization.Providers;
 
-    // TODO: This is a copy of the DataWriterProvider in JsonFX. Need to clean it up and move things elsewhere
-
     /// <summary>
     ///  Data writer provider that uses regular expressions.
     /// </summary>
@@ -85,9 +83,6 @@ namespace EasyHttp.Codecs.JsonFXExtensions
                 {
                     if (this.defaultWriter == null)
                     {
-                        // TODO: decide less arbitrary way to choose default
-                        // without hardcoding value into IDataWriter.
-                        // Currently first DataWriter wins default.
                         this.defaultWriter = writer;
                     }
 

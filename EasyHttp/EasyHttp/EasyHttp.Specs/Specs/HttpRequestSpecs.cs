@@ -76,7 +76,6 @@ namespace EasyHttp.Specs.Specs
     [Subject("HttpClient")]
     public class when_making_a_DELETE_request_with_a_valid_uri
     {
-        // TODO: Implement me
         private static HttpClient httpClient;
 
         private static dynamic response;

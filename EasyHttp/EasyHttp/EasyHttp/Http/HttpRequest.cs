@@ -42,8 +42,6 @@ namespace EasyHttp.Http
     using EasyHttp.Contracts;
     using EasyHttp.Infrastructure;
 
-    // TODO: This class needs cleaning up and abstracting the encoder one more level
-
     /// <summary>
     /// Http request.
     /// </summary>

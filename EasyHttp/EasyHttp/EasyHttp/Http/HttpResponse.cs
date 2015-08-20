@@ -138,8 +138,6 @@ namespace EasyHttp.Http
         /// </summary>
         public string ContentLocation { get; private set; }
 
-        // TODO :This should be files
-
         /// <summary>
         /// Http content description.
         /// </summary>
@@ -338,11 +336,6 @@ namespace EasyHttp.Http
                     this.Expires = expires;
                 }
             }
-
-            // TODO: Finish this.
-            // this.Allow = ...
-            // this.CacheControl = ...
-            // this.Pragma = ...
             this.RawHeaders = this.response.Headers;
         }
 
